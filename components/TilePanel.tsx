@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import Tile from './Tile';
 import { useTilesContext } from './Game';
 
-const Panel = () => {
+const TilePanel = () => {
   const tilesContext = useTilesContext()!
   const moveTile = tilesContext.moveTile
   const dragID = tilesContext.dragID
@@ -60,12 +60,10 @@ const Panel = () => {
   }
 
   return (
-    <div className="mt-6 bg-indigo-300 p-4 rounded shadow-lg">
+    <div className="bg-indigo-300 p-4 rounded shadow-lg">
       <div id="panel" className="grid grid-cols-10 gap-2 min-h-10"
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
-        // onMouseEnter={handleMouseEnter}
-        // onMouseLeave={handleMouseLeave}
         >
           {myTiles.map((tile, index) => (
               <Tile
@@ -79,4 +77,4 @@ const Panel = () => {
   )
 }
 
-export default Panel
+export default TilePanel

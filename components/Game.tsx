@@ -1,8 +1,11 @@
 "use client"
 import { useState, createContext, useCallback, useContext } from 'react';
 
+import "@/app/game.css";
 import Board from '@/components/Board';
-import Panel from '@/components/Panel';
+import TilePanel from '@/components/TilePanel';
+import InputPanel from '@/components/InputPanel';
+import ButtonPanel from '@/components/ButtonPanel';
 
 interface TileData{
     id: number
@@ -66,7 +69,9 @@ const Game = () => {
         <TilesContext.Provider value={{tiles, moveTile, dragID, changeDragID}}>
             <div className={`game ${dragID >=0 ? 'dragging' : ''}`}>
                 <Board />
-                <Panel />
+                <InputPanel />
+                <ButtonPanel />
+                <TilePanel />
             </div>
         </TilesContext.Provider>
     )

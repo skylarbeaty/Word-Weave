@@ -1,0 +1,16 @@
+
+.draggable {
+    cursor: pointer;
+}
+
+.draggable.dragging {
+    cursor: grabbing;
+}
+
+.game {
+    cursor: auto;
+}
+
+.game.dragging {
+    cursor: grabbing;
+}
