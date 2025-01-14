@@ -64,8 +64,10 @@ const Game = () => {
 
     return (
         <TilesContext.Provider value={{tiles, moveTile, dragID, changeDragID}}>
-            <Board />
-            <Panel />
+            <div className={`game ${dragID >=0 ? 'dragging' : ''}`}>
+                <Board />
+                <Panel />
+            </div>
         </TilesContext.Provider>
     )
 }

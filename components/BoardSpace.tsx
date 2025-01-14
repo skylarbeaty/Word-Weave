@@ -11,31 +11,26 @@ const BoardSpace = ({ index }: BoardSpaceProps) => {
     let moveTile = tilesContext.moveTile
     let myTile = tilesContext.tiles.find(tile => tile.position.container === "board" && tile.position.index === index)
     
-    const handleDrop = (e: React.DragEvent) => {
-        e.preventDefault()
-        if (!myTile){//dont add two tiles to the same board space
-            const tileID = Number(e.dataTransfer.getData("dragID"))
-            moveTile(tileID, "board", index)
-        }
+    const handleMouseUp = (e: React.MouseEvent) => {
+        updateTile
     }
 
-    const handleDragOver = (e: React.DragEvent) => {
-        e.preventDefault()
+    const handleMouseEnter = (e: React.MouseEvent) => {
+        updateTile()
     }
 
-    const handleDragEnter = (e: React.DragEvent) => {
-        e.preventDefault()
-        if (!myTile){
-            const tileID = tilesContext.dragID // dragEnter doesnt have access to dataTransfer, so using context/state
+    const updateTile = () => {
+        if (!myTile && tilesContext.dragID >= 0){
+            const tileID = tilesContext.dragID
             moveTile(tileID, "board", index)
         }
     }
 
     return (
-        <div className="boardSpace border border-dashed border-indigo-400 w-10 h-10 flex items-center justify-center" 
-            onDrop={handleDrop}
-            onDragEnter={handleDragEnter}
-            onDragOver={handleDragOver}
+        <div className={`boardSpace border-indigo-400 rounded-md w-10 h-10 flex items-center justify-center
+            ${myTile? "" : "border border-dashed"}`}
+            onMouseUp={handleMouseUp}
+            onMouseEnter={handleMouseEnter}
             >
                 {myTile? (<Tile key={myTile.id} id={myTile.id} letter={myTile.letter}/>) : (<div/>)}
         </div>
