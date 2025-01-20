@@ -19,7 +19,6 @@ const TilePanel = () => {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     e.preventDefault()
-    console.log("mouse over")
     updateDrag(e)
   }
 
@@ -46,7 +45,6 @@ const TilePanel = () => {
         const box = tileRef.getBoundingClientRect()
         //check only tiles that are about the same y and to the left of the x
         if (mouseX > box.left + box.width/2  && mouseY > box.top - box.height/2 && mouseY < box.bottom){
-          console.log("cleared check")
           //check if this tile is closer thatn the others checked
           const dist = Math.hypot(box.left + box.width/2 - mouseX, box.top + box.height/2 - mouseY)
           if (dist < closestDistance){
