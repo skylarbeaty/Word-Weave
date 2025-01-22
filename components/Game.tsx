@@ -54,6 +54,10 @@ const Game = () => {
     const [dragID, setDragID] = useState(-1) // needed for access on other drag events oither than drops
 
     const moveTile = (id: number, newContainer: "panel" | "board", newIndex: number) => {
+        // reject moves that dont change the board state
+        const tile = tiles.find(tile => tile.id === id)
+        if (tile?.position.container === newContainer && tile?.position.index === newIndex)
+            return
         // set the index of the tile with correct id
         setTiles(prevTiles => prevTiles.map(tile =>
             tile.id === id ? { ...tile, position: {container: newContainer, index: newIndex}} : tile
@@ -64,6 +68,7 @@ const Game = () => {
                 tile.position.container === "panel" ? { ...tile, position: {container: "panel", index: i}} : tile
             ))
         }
+        // console.log("updated")
     }
 
     const changeDragID = (id: number) =>{

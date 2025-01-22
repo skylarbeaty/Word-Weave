@@ -19,20 +19,19 @@ const TilePanel = () => {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     e.preventDefault()
-    updateDrag(e)
+    // updateDrag(e)
   }
 
   const updateDrag = (e: React.MouseEvent) => {    
     if (dragID < 0)
       return
     const tileBeforeIndex = getClosestTileBefore(e.clientX, e.clientY)
-    const tileID = dragID
-    if (tileBeforeIndex >= 0){
-      let tileAfter = myTiles[tileBeforeIndex]
-      moveTile(tileID, "panel", tileAfter.position.index + 0.5)//fractional index for sorting, will be adjusted in moveTile method
+    let tileAfter = myTiles[tileBeforeIndex]
+    if (tileBeforeIndex >= 0 && tileAfter.id != dragID){
+      moveTile(dragID, "panel", tileAfter.position.index + 0.5)//fractional index for sorting, will be adjusted in moveTile method
     }
-    else
-      moveTile(tileID, "panel", -0.5)
+    else if (tileBeforeIndex < 0)
+      moveTile(dragID, "panel", -0.5)
   }
 
   //Find the (index of the) tile that the dragging tile can be inserted after, or give -1 if the dragging tile is first/only
@@ -44,7 +43,7 @@ const TilePanel = () => {
       if (tileRef){
         const box = tileRef.getBoundingClientRect()
         //check only tiles that are about the same y and to the left of the x
-        if (mouseX > box.left + box.width/2  && mouseY > box.top - box.height/2 && mouseY < box.bottom){
+        if (mouseX > box.left + box.width/2  && mouseY > box.top - box.height/2 && mouseY < box.bottom){//extra padding on top (middle conditional) to avoid deadzone between row of tiles in panel
           //check if this tile is closer thatn the others checked
           const dist = Math.hypot(box.left + box.width/2 - mouseX, box.top + box.height/2 - mouseY)
           if (dist < closestDistance){
