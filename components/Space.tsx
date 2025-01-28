@@ -14,7 +14,9 @@ const Space = ({id}: SpaceProps) => {
   })
 
   return (
-    <div className='border-indigo-400 border border-dashed rounded-md w-10 h-10'/>
+    <div className='border-indigo-400 border border-dashed rounded-md w-10 h-10'
+      ref={divRef}
+    />
   )
 }
 

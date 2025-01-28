@@ -7,13 +7,12 @@ import TilePanel from './TilePanel';
 import Board from './Board';
 import InputPanel from '@/components/InputPanel';
 import ButtonPanel from '@/components/ButtonPanel';
-import { space } from 'postcss/lib/list';
 
 interface TileData{
     id: number
     letter: string
     divRef: HTMLDivElement | null //use to access current position through client rect
-    spaceID: number //use to access current actual/target position through client rect
+    spaceID: number //use to access current actual/target position spaces[spaceID].divRef & using client rect
 }
 
 interface SpaceData{
@@ -87,14 +86,14 @@ const Game = () => {
     }
 
     const updateSpace = useCallback((id: number, ref: HTMLDivElement | null) => {
-        const spaceIndex = spaces.current.findIndex((space) => space.id = id)
+        const spaceIndex = spaces.current.findIndex((space) => space.id === id)
         if (spaceIndex != -1){
             spaces.current[spaceIndex].divRef = ref
         }
     }, [])
 
     return (
-        <GameContext.Provider value={{tiles,moveTile,spaces: spaces.current, updateSpace}}>
+        <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace}}>
             <div>
                 <Board/>
                 <InputPanel/>
