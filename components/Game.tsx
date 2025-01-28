@@ -1,84 +1,121 @@
 "use client"
-import { useState, createContext, useCallback, useContext } from 'react';
+import { useState, createContext, useCallback, useContext, useRef } from 'react';
 
 import "@/app/game.css";
-import Board from '@/components/Board';
-import TilePanel from '@/components/TilePanel';
+import Tile from './Tile';
+import TilePanel from './TilePanel';
+import Board from './Board';
 import InputPanel from '@/components/InputPanel';
 import ButtonPanel from '@/components/ButtonPanel';
 
 interface TileData{
     id: number
     letter: string
+    divRef: HTMLDivElement | null //use to access current position through client rect
+    spaceID: number //use to access current actual/target position spaces[spaceID].divRef & using client rect
+}
+
+interface SpaceData{
+    id: number
+    divRef: HTMLDivElement | null
     position: {
         container: "panel" | "board"
         index: number
     }
 }
 
-//test letter set
-// const letters = [ "A", "B", "C", "D", "E", "F", "G", "H", "I", 
-//                 "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-//                 "S", "T", "U", "V", "W", "X", "Y", "Z", 
-//                 "A", "B", "C", "D" ]
-
-//test letter set
-const letters = [ "A", "B", "O", "R", "E", "N", "G", "L", "P", "M",
-                "N", "A", "A", "P", "A", "O", "R", "A", "N", "G",
-                "E", "B", "N", "P", "E", "L", "M", "G", "P", "A" ]
-
-const initialTiles: TileData[] = letters.map((letter,index) => { return {
-    id: index + 1, 
-    letter: letter, 
-    position: {
-        container: "panel", 
-        index: index
-    }
-}})
-
-interface TilesContextProps {
+interface GameContextProps{
     tiles: TileData[]
-    moveTile: (id: number, newContainer: 'panel' | 'board', newIndex: number) => void;
+    moveTile: (id: number, newSpaceID: number) => void
+    spaces: SpaceData[]
+    updateSpace: (id: number, ref: HTMLDivElement | null) => void;
     dragID: number
     changeDragID: (id: number) => void;
 }
 
-const TilesContext = createContext<TilesContextProps | undefined>(undefined)
+const GameContext = createContext<GameContextProps | undefined>(undefined)
 
-export function useTilesContext(){
-    return useContext(TilesContext)
+export function useGameContext(){
+    return useContext(GameContext)
 }
+
+//test letter set
+const letters = [   "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
+                    "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+                    "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D" ]
+
+//test letter set
+// const letters = [   "A", "B", "O", "R", "E", "N", "G", "L", "P", "M",
+//                     "N", "A", "A", "P", "A", "O", "R", "A", "N", "G",
+//                     "E", "B", "N", "P", "E", "L", "M", "G", "P", "A" ]
+
+const initialTiles: TileData[] = letters.map((letter,index) => { return {
+    id: index + 1,
+    letter: letter,
+    divRef: null,
+    spaceID: index + 141
+}})
+
+const initialSpaces: SpaceData[] = [
+    // Board Spaces
+    ...Array.from({length: 140}, (_, index): SpaceData => ({
+        id: index + 1,
+        divRef: null,
+        position: {
+            container: "board",
+            index: index
+        }
+    })),
+    // Tile Panel Spaces
+    ...Array.from({length: 30}, (_, index): SpaceData => ({
+        id: index + 141,
+        divRef: null,
+        position: {
+            container: "panel",
+            index: index
+        }
+    })),
+];
 
 const Game = () => {
     const [tiles, setTiles] = useState<TileData[]>(initialTiles)
-    const [dragID, setDragID] = useState(-1) // needed for access on other drag events oither than drops
+    const [dragID, setDragID] = useState(-1)
+    const spaces = useRef<SpaceData[]>(initialSpaces)
 
-    const moveTile = (id: number, newContainer: "panel" | "board", newIndex: number) => {
-        // set the index of the tile with correct id
-        setTiles(prevTiles => prevTiles.map(tile =>
-            tile.id === id ? { ...tile, position: {container: newContainer, index: newIndex}} : tile
+    const moveTile = (id: number, newSpaceID: number) => {
+        setTiles(prevTiles => prevTiles.map(tile => 
+            tile.id === id ? {...tile, spaceID: newSpaceID} : tile
         ))
-        // sorting and re-indexing tiles
-        if (newContainer === "panel"){
-            setTiles(tiles => tiles.sort((a,b) => a.position.index - b.position.index).map((tile, i) =>
-                tile.position.container === "panel" ? { ...tile, position: {container: "panel", index: i}} : tile
-            ))
-        }
     }
+
+    const updateSpace = useCallback((id: number, ref: HTMLDivElement | null) => {
+        const spaceIndex = spaces.current.findIndex((space) => space.id === id)
+        if (spaceIndex != -1){
+            spaces.current[spaceIndex].divRef = ref
+        }
+    }, [])
 
     const changeDragID = (id: number) =>{
         setDragID(id)
     }
 
     return (
-        <TilesContext.Provider value={{tiles, moveTile, dragID, changeDragID}}>
-            <div className={`game ${dragID >=0 ? 'dragging' : ''}`}>
-                <Board />
-                <InputPanel />
-                <ButtonPanel />
-                <TilePanel />
+        <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace, dragID, changeDragID}}>
+            <div>
+                <Board/>
+                <InputPanel/>
+                <ButtonPanel/>
+                <TilePanel/>
+                {tiles.map((tile, index) => (
+                    <Tile
+                        ref={(el: HTMLDivElement | null) => {tiles[index].divRef = el}}
+                        key={tile.id} 
+                        id={tile.id} 
+                        letter={tile.letter} 
+                    />
+                ))}
             </div>
-        </TilesContext.Provider>
+        </GameContext.Provider>
     )
 }
 

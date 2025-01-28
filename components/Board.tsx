@@ -1,10 +1,14 @@
-import BoardSpace from './BoardSpace';
+import React from 'react'
+import { useGameContext } from './Game';
+import Space from './Space'
 
 const Board = () => {
+  const mySpaces = useGameContext()!.spaces.filter(space => space.position.container == "board")
+
   return (
     <div id="board" className="grid grid-cols-10 gap-2 p-4">
-      {Array.from({ length: 140 }).map((_, index) => (
-        <BoardSpace key={index} index={index} />
+      {mySpaces.map((space, index) => (
+        <Space key={space.id} id={space.id} />
       ))}
     </div>
   )
