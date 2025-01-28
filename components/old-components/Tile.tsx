@@ -106,7 +106,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>(({ id, letter }, ref) => {
       }}>
         {/* inside div for movement animation */}
         <div className={`draggable w-10 h-10 flex items-center justify-center rounded text-white drop-shadow-md transition-all ease-in-out
-          ${dragID == id ? "bg-indigo-600  animate-pulse" : "bg-indigo-900"}
+          ${dragID == id ? "bg-indigo-600 animate-pulse" : "bg-indigo-900"}
           ${dragID >=0 ? "dragging" : ""}`}
           onMouseDown={handleMouseDown}
           ref={(div) => {

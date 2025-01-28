@@ -29,6 +29,8 @@ interface GameContextProps{
     moveTile: (id: number, newSpaceID: number) => void
     spaces: SpaceData[]
     updateSpace: (id: number, ref: HTMLDivElement | null) => void;
+    dragID: number
+    changeDragID: (id: number) => void;
 }
 
 const GameContext = createContext<GameContextProps | undefined>(undefined)
@@ -77,6 +79,7 @@ const initialSpaces: SpaceData[] = [
 
 const Game = () => {
     const [tiles, setTiles] = useState<TileData[]>(initialTiles)
+    const [dragID, setDragID] = useState(-1)
     const spaces = useRef<SpaceData[]>(initialSpaces)
 
     const moveTile = (id: number, newSpaceID: number) => {
@@ -92,8 +95,12 @@ const Game = () => {
         }
     }, [])
 
+    const changeDragID = (id: number) =>{
+        setDragID(id)
+    }
+
     return (
-        <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace}}>
+        <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace, dragID, changeDragID}}>
             <div>
                 <Board/>
                 <InputPanel/>

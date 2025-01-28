@@ -14,3 +14,7 @@
 .game.dragging {
     cursor: grabbing;
 }
+
+.dragging {
+    cursor: grabbing;
+}
