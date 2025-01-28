@@ -9,6 +9,7 @@
 
 .game {
     cursor: auto;
+    overflow: visible;
 }
 
 .game.dragging {
@@ -17,4 +18,10 @@
 
 .dragging {
     cursor: grabbing;
+}
+
+.space-outline{
+    overflow: visible;
+    outline: 2px solid purple;
+    outline-offset: 2px;
 }
