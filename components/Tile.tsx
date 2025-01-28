@@ -80,7 +80,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
   const handleMouseUp = (e: MouseEvent) => {
     e.preventDefault() 
     gameContext.changeDragID(-1)
-    setGhostReady(true);
+    setGhostReady(false);
     document.removeEventListener("mousemove", handleMouseMove)
     document.removeEventListener("mouseup", handleMouseUp)
   }
