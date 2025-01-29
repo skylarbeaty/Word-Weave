@@ -59,7 +59,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
     setReady(true)
   }, [myTile?.spaceID, gameContext.spaces])
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handlePointerDown = (e: React.PointerEvent) => {
     e.preventDefault()
 
     const rect = myTile.divRef?.getBoundingClientRect()!
@@ -67,22 +67,22 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
     updateGhost(e.clientX - mouseDelta.x, e.clientY - mouseDelta.y)
     gameContext.changeDragID(props.id)
 
-    document.addEventListener("mousemove", handleMouseMove)
-    document.addEventListener("mouseup", handleMouseUp)
+    document.addEventListener("pointermove", handlePointerMove, { passive: false })
+    document.addEventListener("pointerup", handlePointerUp, { passive: false })
   }
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handlePointerMove = (e: PointerEvent) => {
     e.preventDefault() 
     setGhostReady(true);
     updateGhost(e.clientX - mouseDelta.x, e.clientY - mouseDelta.y)
   }
 
-  const handleMouseUp = (e: MouseEvent) => {
+  const handlePointerUp = (e: PointerEvent) => {
     e.preventDefault() 
     gameContext.changeDragID(-1)
     setGhostReady(false);
-    document.removeEventListener("mousemove", handleMouseMove)
-    document.removeEventListener("mouseup", handleMouseUp)
+    document.removeEventListener("pointermove", handlePointerMove)
+    document.removeEventListener("pointerup", handlePointerUp)
   }
 
   const updateGhost = (posx: number, posY: number) =>{
@@ -94,18 +94,18 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
 
   return (
     <>
-      <div className={`w-10 h-10 flex fixed items-center justify-center rounded 
+      <div className={`w-10 h-10 flex fixed items-center justify-center rounded
         ${ready && "bg-indigo-600 text-white drop-shadow-md"}
         ${gameContext.dragID === myTile.id && "animate-pulse"}
         ${gameContext.dragID === -1 ? "draggable" : "dragging"}
         `}
         ref={ref}
-        onMouseDown={handleMouseDown}
+        onPointerDown={handlePointerDown}
       >
         {ready && props.letter}
       </div>
       {gameContext.dragID === myTile.id &&
-        <div className={`dragging pointer-events-none w-10 h-10 flex fixed items-center justify-center rounded 
+        <div className={`dragging pointer-events-none touch-none w-10 h-10 flex fixed items-center justify-center rounded 
           ${ghostReady && 'bg-indigo-400 animate-pulse text-white drop-shadow-md'}`}
           ref={tileGhostRef}
         >

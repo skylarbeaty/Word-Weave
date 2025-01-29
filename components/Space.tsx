@@ -14,16 +14,19 @@ const Space = ({id}: SpaceProps) => {
     gameContext.updateSpace(id, divRef.current)
   })
 
-  const handleMouseEnter = (e: React.MouseEvent) => {
+  const handlePointerEnter = (e: React.PointerEvent) => {
+    e.preventDefault() 
     if (gameContext.dragID != -1)
       setMouseHover(true)
   }
 
-  const handleMouseLeave = (e: React.MouseEvent) => {
+  const handlePointerLeave = (e: React.PointerEvent) => {
+    e.preventDefault() 
     setMouseHover(false)
   }
 
-  const handleMouseUp = (e: React.MouseEvent) => {
+  const handlePointerUp = (e: React.PointerEvent) => {
+    e.preventDefault() 
     if (gameContext.dragID != -1){
       gameContext.moveTile(gameContext.dragID, id)
       setMouseHover(false)
@@ -36,9 +39,9 @@ const Space = ({id}: SpaceProps) => {
         ${mouseHover ? `ring-2 ring-emerald-700 border-emerald-400 border-solid` : 
           `border-indigo-400 border border-dashed`}`}
         ref={divRef}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onMouseUp={handleMouseUp}
+        onPointerEnter={handlePointerEnter}
+        onPointerLeave={handlePointerLeave}
+        onPointerUp={handlePointerUp}
       />
     </>
   )

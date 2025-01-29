@@ -1,6 +1,7 @@
 
 .draggable {
     cursor: pointer;
+    touch-action: none; 
 }
 
 .draggable.dragging {
@@ -10,6 +11,7 @@
 .game {
     cursor: auto;
     overflow: visible;
+    touch-action: none !important; 
 }
 
 .game.dragging {
@@ -18,10 +20,4 @@
 
 .dragging {
     cursor: grabbing;
-}
-
-.space-outline{
-    overflow: visible;
-    outline: 2px solid purple;
-    outline-offset: 2px;
 }
