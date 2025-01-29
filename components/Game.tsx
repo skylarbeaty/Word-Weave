@@ -1,5 +1,5 @@
 "use client"
-import { useState, createContext, useCallback, useContext, useRef } from 'react';
+import { useState, createContext, useCallback, useContext, useRef, useEffect } from 'react';
 
 import "@/app/game.css";
 import Tile from './Tile';
@@ -7,6 +7,7 @@ import TilePanel from './TilePanel';
 import Board from './Board';
 import InputPanel from '@/components/InputPanel';
 import ButtonPanel from '@/components/ButtonPanel';
+import { searchBoard } from '@/app/searchBoard';
 
 interface TileData{
     id: number
@@ -39,12 +40,12 @@ export function useGameContext(){
     return useContext(GameContext)
 }
 
-//test letter set
+// test letter set
 // const letters = [   "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
 //                     "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 //                     "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D" ]
 
-//test letter set
+// test letter set
 const letters = [   "A", "B", "O", "R", "E", "N", "G", "L", "P", "M",
                     "N", "A", "A", "P", "A", "O", "R", "A", "N", "G",
                     "E", "B", "N", "P", "E", "L", "M", "G", "P", "A" ]
@@ -57,7 +58,7 @@ const initialTiles: TileData[] = letters.map((letter,index) => { return {
 }})
 
 const initialSpaces: SpaceData[] = [
-    // Board Spaces
+    // board spaces
     ...Array.from({length: 140}, (_, index): SpaceData => ({
         id: index + 1,
         divRef: null,
@@ -66,7 +67,7 @@ const initialSpaces: SpaceData[] = [
             index: index
         }
     })),
-    // Tile Panel Spaces
+    // tile panel spaces
     ...Array.from({length: 30}, (_, index): SpaceData => ({
         id: index + 141,
         divRef: null,
@@ -81,6 +82,10 @@ const Game = () => {
     const [tiles, setTiles] = useState<TileData[]>(initialTiles)
     const [dragID, setDragID] = useState(-1)
     const spaces = useRef<SpaceData[]>(initialSpaces)
+
+    useEffect(() => {
+        searchBoard(tiles, spaces.current)
+    }, [tiles])
 
     const moveTile = (id: number, newSpaceID: number) => {
         setTiles(prevTiles => prevTiles.map(tile => 
