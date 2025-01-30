@@ -7,22 +7,28 @@ import TilePanel from './TilePanel';
 import Board from './Board';
 import InputPanel from '@/components/InputPanel';
 import ButtonPanel from '@/components/ButtonPanel';
-import { searchBoard } from '@/app/searchBoard';
+import { searchBoard } from '@/app/boardSolver';
 
-interface TileData{
+export interface TileData{
     id: number
     letter: string
     divRef: HTMLDivElement | null //use to access current position through client rect
     spaceID: number //use to access current actual/target position spaces[spaceID].divRef & using client rect
 }
 
-interface SpaceData{
+export interface SpaceData{
     id: number
     divRef: HTMLDivElement | null
     position: {
         container: "panel" | "board"
         index: number
     }
+}
+
+export interface SolutionData{
+    solutionTiles: Set<number>
+    disconnectedValidTiles: Set<number>
+    score: number
 }
 
 interface GameContextProps{
@@ -32,6 +38,7 @@ interface GameContextProps{
     updateSpace: (id: number, ref: HTMLDivElement | null) => void;
     dragID: number
     changeDragID: (id: number) => void;
+    solution: SolutionData
 }
 
 const GameContext = createContext<GameContextProps | undefined>(undefined)
@@ -76,15 +83,22 @@ const initialSpaces: SpaceData[] = [
             index: index
         }
     })),
-];
+]
+
+const initialSolution: SolutionData = {
+    solutionTiles: new Set(),
+    disconnectedValidTiles: new Set(),
+    score: 0
+}
 
 const Game = () => {
     const [tiles, setTiles] = useState<TileData[]>(initialTiles)
     const [dragID, setDragID] = useState(-1)
     const spaces = useRef<SpaceData[]>(initialSpaces)
+    const [solution, setSolution] = useState<SolutionData>(initialSolution)
 
     useEffect(() => {
-        searchBoard(tiles, spaces.current)
+        searchBoard(tiles, spaces.current, setSolution)
     }, [tiles])
 
     const moveTile = (id: number, newSpaceID: number) => {
@@ -105,7 +119,7 @@ const Game = () => {
     }
 
     return (
-        <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace, dragID, changeDragID}}>
+        <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace, dragID, changeDragID, solution}}>
             <div>
                 <Board/>
                 <InputPanel/>

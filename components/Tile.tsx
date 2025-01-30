@@ -19,6 +19,12 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
   const myTile = gameContext.tiles[props.id - 1]
   const mySpace = gameContext.spaces[myTile.spaceID - 1]
   let mouseDelta = {x: 0, y: 0} // for dragging ghost image
+  
+  let bgStyle = "bg-indigo-600"
+  if (gameContext.solution.solutionTiles.has(myTile.id))
+      bgStyle = "bg-emerald-700"
+  else if (gameContext.solution.disconnectedValidTiles.has(myTile.id))
+      bgStyle = "bg-indigo-900"
 
   useLayoutEffect(() => {
     // capture current target position
@@ -95,7 +101,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
   return (
     <>
       <div className={`w-10 h-10 flex fixed items-center justify-center rounded
-        ${ready && "bg-indigo-600 text-white drop-shadow-md"}
+        ${ready && `${bgStyle} bg-indigo-600 text-white drop-shadow-md`}
         ${gameContext.dragID === myTile.id && "animate-pulse"}
         ${gameContext.dragID === -1 ? "draggable" : "dragging"}
         `}

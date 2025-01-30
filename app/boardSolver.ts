@@ -1,5 +1,6 @@
 import { debounce } from "@/util/debounce"
 import { wordList } from "@/scripts/wordlist"
+import { TileData, SpaceData, SolutionData } from "@/components/Game"
 
 interface WordData {
     id: number
@@ -9,15 +10,31 @@ interface WordData {
     connected: boolean // is the word in the biggest connected graph of valid words
 }
 
-const solveBoard = (tiles: any[], spaces: any[]) => {
+const solveBoard = (tiles: TileData[], spaces: SpaceData[], setSolution: React.Dispatch<React.SetStateAction<SolutionData>>) => {
     let words: WordData[] = []
     words = findWords(tiles, spaces)
     words = validateWords(words)
     words = findConnectedWords(words)
+
+    let solution: SolutionData = {
+      solutionTiles: new Set<number>(),
+      disconnectedValidTiles: new Set<number>(),
+      score: 0
+    }
+
+    for (const word of words){
+      if (word.connected)
+        word.tileIDs.forEach(id => solution.solutionTiles.add(id))
+      else if (word.valid)//only add the valid words that arent in solution
+        word.tileIDs.forEach(id => solution.disconnectedValidTiles.add(id))
+    }
+
+    setSolution(solution)
+
     console.log("words:", words)
 }
 
-const findWords = (tiles: any[], spaces: any[]) => {
+const findWords = (tiles: TileData[], spaces: SpaceData[]) => {
     const boardTiles = tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "board")
   
     let words: WordData[] = []
