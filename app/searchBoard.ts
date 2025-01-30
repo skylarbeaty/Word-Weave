@@ -2,25 +2,27 @@ import { debounce } from "@/util/debounce"
 import { wordList } from "@/scripts/wordlist"
 
 interface WordData {
+    id: number
     word: string
     tileIDs: Set<number>
-    valid: boolean
+    valid: boolean // is the word in the word list
+    connected: boolean // is the word in the biggest connected graph of valid words
 }
 
 const solveBoard = (tiles: any[], spaces: any[]) => {
     let words: WordData[] = []
     words = findWords(tiles, spaces)
     words = validateWords(words)
+    words = findConnectedWords(words)
     console.log("words:", words)
 }
 
 const findWords = (tiles: any[], spaces: any[]) => {
-    const boardTiles = tiles
-      .filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "board")
-      .sort((a, b) => spaces.find(space => space.id === a.spaceID)!.position.index - spaces.find(space => space.id === b.spaceID)!.position.index)
+    const boardTiles = tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "board")
   
     let words: WordData[] = []
     let width = 10, height = 14
+    let id = 1
   
     // make 2D grid from board
     const grid: ({letter: string, id: number} | null)[][] = Array.from({ length: height }, () => Array(width).fill(null))
@@ -39,18 +41,18 @@ const findWords = (tiles: any[], spaces: any[]) => {
       let word = ""
       let tileIDs: Set<number> = new Set<number>()
       for (let col = 0; col < width; col++) {
-        if (grid[row][col]) {
+        if (grid[row][col]) {// keep track of each letter going across
           word += grid[row][col]?.letter
           tileIDs.add(grid[row][col]?.id!)
-        } else {
+        } else {// when theres an empty space, check if a word was made
           if (word.length > 1) 
-            words.push({word, tileIDs, valid: false})
+            words.push({id: id++, word, tileIDs, valid: false, connected: false})
           word = ""
           tileIDs = new Set<number>()
         }
       }
-      if (word.length > 1) 
-        words.push({word, tileIDs, valid: false})
+      if (word.length > 1) // when its the end of the row, check if a word was made
+        words.push({id: id++, word, tileIDs, valid: false, connected: false})
     }
   
     // scan for vertical words
@@ -63,13 +65,13 @@ const findWords = (tiles: any[], spaces: any[]) => {
           tileIDs.add(grid[row][col]?.id!)
         } else {
           if (word.length > 1) 
-            words.push({word, tileIDs, valid: false})
+            words.push({id: id++, word, tileIDs, valid: false, connected: false})
           word = ""
           tileIDs = new Set<number>()
         }
       }
       if (word.length > 1) 
-        words.push({word, tileIDs, valid: false})
+        words.push({id: id++, word, tileIDs, valid: false, connected: false})
     }
 
     return words
@@ -78,8 +80,59 @@ const findWords = (tiles: any[], spaces: any[]) => {
 const validateWords = (words: WordData[]) => {
     return words.map(wordObj => ({
         ...wordObj,
-        valid: wordList.has(wordObj.word.toLowerCase()),
+        valid: wordList.has(wordObj.word.toLowerCase()), // check against local word list
     }))
+}
+
+const findConnectedWords = (words: WordData[]) => {
+    let visited = new Set<number>()
+    let largestGraph = new Set<number>() // list of word IDs, words array holds connections by common *tile* ID
+    let largestScore = 0
+
+    const validWords = words.filter(word => word.valid)
+    
+    for (const word of validWords) {
+        if(!visited.has(word.id)){
+            // recursively search through every valid word that is connected to this word
+            const currentData = connectedWordDFS(word, validWords, visited, new Set(), 0)
+            // update data from DFS return
+            visited = currentData.visited
+            if (currentData.score > largestScore){
+                largestScore = currentData.score
+                largestGraph = currentData.currentGraph
+            }
+            // if any valid words were not connected/visited, the next loop will DFS on one of those words
+        }
+    }
+
+    return words.map(word => ({
+        ...word,
+        connected: largestGraph.has(word.id)
+    }))
+}
+
+const connectedWordDFS = (word: WordData, validWords: WordData[], visited: Set<number>, currentGraph: Set<number>, score: number) => {
+    currentGraph.add(word.id)
+    visited.add(word.id)
+    score += word.word.length // score is currently just he length of the word, e.i. how many tiles were used to make it
+
+    // neighboring words will share a tile ID
+    const neighbors = validWords.filter(
+        wordObj => wordObj.id != word.id && [...wordObj.tileIDs].some(id => word.tileIDs.has(id))
+    )
+
+    // recurse through connected words
+    for (const neighbor of neighbors){
+        if (!visited.has(neighbor.id)){
+            // recursively call on each neighbor and pass the data up through returns
+            const result = connectedWordDFS(neighbor, validWords, visited, currentGraph, score)
+            currentGraph = result.currentGraph
+            score = result.score
+            visited = result.visited
+        }
+    }
+
+    return {currentGraph, score, visited}
 }
 
 export const searchBoard = debounce(solveBoard, 300)
