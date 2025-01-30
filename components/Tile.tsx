@@ -1,7 +1,5 @@
 import { useRef, forwardRef, useLayoutEffect, useEffect, useState } from 'react'
 import { useGameContext } from './Game';
-import { start } from 'repl';
-import { read } from 'fs';
 
 interface TileProps {
   id: number
@@ -9,16 +7,18 @@ interface TileProps {
 }
 
 const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
-  const gameContext = useGameContext()!
   const targetPos = useRef<{ left: number; top: number } | null>(null)
   const prevPos = useRef<{left: number, top: number} | null>(null)
   const initPos = useRef<{left: number, top: number} | null>(null)
   const tileGhostRef = useRef<HTMLDivElement | null>(null)
+  
   const [ready, setReady] = useState<boolean>(false)
   const [ghostReady, setGhostReady] = useState<boolean>(false)
+  
+  const gameContext = useGameContext()!
   const myTile = gameContext.tiles[props.id - 1]
   const mySpace = gameContext.spaces[myTile.spaceID - 1]
-  let mouseDelta = {x: 0, y: 0}
+  let mouseDelta = {x: 0, y: 0} // for dragging ghost image
 
   useLayoutEffect(() => {
     // capture current target position
@@ -105,6 +105,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
         {ready && props.letter}
       </div>
       {gameContext.dragID === myTile.id &&
+        // ghost tile that follows the cursor when dragging
         <div className={`dragging pointer-events-none touch-none w-10 h-10 flex fixed items-center justify-center rounded 
           ${ghostReady && 'bg-indigo-400 animate-pulse text-white drop-shadow-md'}`}
           ref={tileGhostRef}

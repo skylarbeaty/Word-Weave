@@ -40,12 +40,12 @@ export function useGameContext(){
     return useContext(GameContext)
 }
 
-// test letter set
+// test letter set: alphabeta
 // const letters = [   "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
 //                     "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 //                     "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D" ]
 
-// test letter set
+// test letter set: fruits
 const letters = [   "A", "B", "O", "R", "E", "N", "G", "L", "P", "M",
                     "N", "A", "A", "P", "A", "O", "R", "A", "N", "G",
                     "E", "B", "N", "P", "E", "L", "M", "G", "P", "A" ]
