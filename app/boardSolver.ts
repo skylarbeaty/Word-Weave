@@ -23,9 +23,10 @@ const solveBoard = (tiles: TileData[], spaces: SpaceData[], setSolution: React.D
     }
 
     for (const word of words){
-      if (word.connected)
+      if (word.connected){
         word.tileIDs.forEach(id => solution.solutionTiles.add(id))
-      else if (word.valid)//only add the valid words that arent in solution
+        solution.score += word.word.length
+      }else if (word.valid)//only add the valid words that arent in solution
         word.tileIDs.forEach(id => solution.disconnectedValidTiles.add(id))
     }
 

@@ -121,6 +121,7 @@ const Game = () => {
     return (
         <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace, dragID, changeDragID, solution}}>
             <div>
+                <h2 className='text-xl font-bold text-center m-2 text-emerald-800'>Score: {solution.score}</h2>
                 <Board/>
                 <InputPanel/>
                 <ButtonPanel/>
