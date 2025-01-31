@@ -123,7 +123,7 @@ const Game = () => {
             <div>
                 <h2 className='text-xl font-bold text-center m-2 text-emerald-800'>Score: {solution.score}</h2>
                 <Board/>
-                <InputPanel/>
+                {/* <InputPanel/> */}
                 <ButtonPanel/>
                 <TilePanel/>
                 {tiles.map((tile, index) => (

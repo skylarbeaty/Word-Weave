@@ -31,8 +31,6 @@ const solveBoard = (tiles: TileData[], spaces: SpaceData[], setSolution: React.D
     }
 
     setSolution(solution)
-
-    console.log("words:", words)
 }
 
 const findWords = (tiles: TileData[], spaces: SpaceData[]) => {
