@@ -14,6 +14,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
   
   const [ready, setReady] = useState<boolean>(false)
   const [ghostReady, setGhostReady] = useState<boolean>(false)
+  const [resized, setResized] = useState<boolean>(false)
   
   const gameContext = useGameContext()!
   const myTile = gameContext.tiles[props.id - 1]
@@ -27,6 +28,17 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
       bgStyle = "bg-indigo-900"
 
   useLayoutEffect(() => {
+    
+    // handle window resize
+    if (resized && mySpace.divRef && myTile.divRef && targetPos.current && prevPos.current && initPos.current){
+      const rect = myTile.divRef.getBoundingClientRect()
+      let diff = {left: prevPos.current!.left - rect.left, top: prevPos.current!.top - rect.top} 
+
+      initPos.current = {left: initPos.current.left - diff.left, top: initPos.current.top - diff.top}
+      prevPos.current = {left: rect.left, top: rect.top}
+      setResized(false)
+    }
+
     // capture current target position
     if (mySpace.divRef) {
       const rect = mySpace.divRef.getBoundingClientRect()
@@ -63,6 +75,9 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
       }
     }
     setReady(true)
+
+    window.addEventListener("resize", () => {setResized(true)});
+    return () => window.removeEventListener("resize", () => {setResized(true)});
   }, [myTile?.spaceID, gameContext.spaces])
 
   const handlePointerDown = (e: React.PointerEvent) => {
