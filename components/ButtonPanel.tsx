@@ -1,6 +1,7 @@
 import React from 'react'
 import { useGameContext } from './Game'
 import { shuffleArray } from '@/util/shuffle'
+import { debounce } from "@/util/debounce"
 
 const ButtonPanel = () => {
   const gameContext = useGameContext()!
@@ -39,22 +40,21 @@ const ButtonPanel = () => {
 
   return (
     <div className='bg-indigo-200 mt-2 mb-2 p-4 rounded shadow-lg flex justify-between'>
-        <button className='bg-indigo-800 text-white p-3 ml-1 min-w-24 rounded-lg'
+        <button className='bg-indigo-800 text-white p-2 ml-1 min-w-28 rounded-lg text-xl'
           onPointerDown={handleReturn}
         >
           Return
         </button>
-        <button className='bg-indigo-800 text-white p-3 mr-1 mr-1 min-w-24 rounded-lg'
+        <button className='bg-indigo-800 text-white p-2 ml-1 mr-1 min-w-28 rounded-lg text-xl'
+          onPointerDown={debounce(handleShuffle, 100)}
+        >
+          Shuffle
+        </button>
+        <button className='bg-indigo-800 text-white p-2 mr-1 mr-1 min-w-28 rounded-lg text-xl'
           onPointerDown={handleRestart}
         >
           Restart
         </button>
-        <button className='bg-indigo-800 text-white p-3 ml-1 mr-1 min-w-24 rounded-lg'
-          onPointerDown={handleShuffle}
-        >
-          Shuffle
-        </button>
-        <button className='bg-indigo-800 text-white p-3 ml-1 min-w-24 rounded-lg'>Move</button>
     </div>
   )
 }
