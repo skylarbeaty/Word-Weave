@@ -116,7 +116,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
   return (
     <>
       <div className={`w-10 h-10 flex fixed items-center justify-center rounded
-        ${ready && `${bgStyle} bg-indigo-600 text-white drop-shadow-md`}
+        ${ready && `${bgStyle} text-white drop-shadow-md`}
         ${gameContext.dragID === myTile.id && "animate-pulse"}
         ${gameContext.dragID === -1 ? "draggable" : "dragging"}
         `}
