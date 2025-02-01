@@ -39,18 +39,18 @@ const ButtonPanel = () => {
   }
 
   return (
-    <div className='bg-indigo-200 mt-2 mb-2 p-4 rounded shadow-lg flex justify-between'>
-        <button className='bg-indigo-800 text-white p-2 ml-1 min-w-28 rounded-lg text-xl'
+    <div className='bg-indigo-200 mt-2 m-1 sm:m-0 sm:mb-2 p-1 sm:p-4 rounded shadow-lg flex justify-between'>
+        <button className='bg-indigo-800 text-white p-2 m-1 sm:m-0 rounded-lg min-w-20 sm:min-w-28 text-l sm:text-xl'
           onPointerDown={handleReturn}
         >
           Return
         </button>
-        <button className='bg-indigo-800 text-white p-2 ml-1 mr-1 min-w-28 rounded-lg text-xl'
+        <button className='bg-indigo-800 text-white p-2 m-1 sm:m-0 rounded-lg min-w-20 sm:min-w-28 text-l sm:text-xl'
           onPointerDown={debounce(handleShuffle, 100)}
         >
           Shuffle
         </button>
-        <button className='bg-indigo-800 text-white p-2 mr-1 mr-1 min-w-28 rounded-lg text-xl'
+        <button className='bg-indigo-800 text-white p-2 m-1 sm:m-0 rounded-lg min-w-20 sm:min-w-28 text-l sm:text-xl'
           onPointerDown={handleRestart}
         >
           Restart

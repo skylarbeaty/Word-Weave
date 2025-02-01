@@ -41,7 +41,7 @@ const Space = ({id}: SpaceProps) => {
 
   return (
     <>
-      <div className={`w-10 h-10 overflow-visible rounded-md
+      <div className={`w-6 h-6 xs:w-9 xs:h-9 sm:w-10 sm:h-10 overflow-visible rounded-md justify-self-center
         ${mouseHover ? `ring-2 ring-emerald-700 border-emerald-400 border-solid` : myBG}`}
         ref={divRef}
         onPointerEnter={handlePointerEnter}

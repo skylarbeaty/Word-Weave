@@ -11,7 +11,13 @@
 .game {
     cursor: auto;
     overflow: visible;
-    touch-action: none !important; 
+    /* touch-action: none !important;  */
+    /* display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; */
+    min-height: 100vh;
+    overflow: hidden;
 }
 
 .game.dragging {

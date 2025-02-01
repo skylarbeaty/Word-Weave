@@ -115,7 +115,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
 
   return (
     <>
-      <div className={`w-10 h-10 flex fixed items-center justify-center rounded
+      <div className={`w-6 h-6 xs:w-9 xs:h-9 sm:w-10 sm:h-10 flex fixed items-center justify-center rounded
         ${ready && `${bgStyle} text-white drop-shadow-md`}
         ${gameContext.dragID === myTile.id && "animate-pulse"}
         ${gameContext.dragID === -1 ? "draggable" : "dragging"}
@@ -127,7 +127,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
       </div>
       {gameContext.dragID === myTile.id &&
         // ghost tile that follows the cursor when dragging
-        <div className={`dragging pointer-events-none touch-none w-10 h-10 flex fixed items-center justify-center rounded 
+        <div className={`dragging pointer-events-none touch-none w-8 h-8 sm:w-10 sm:h-10 flex fixed items-center justify-center rounded 
           ${ghostReady && 'bg-indigo-400 animate-pulse text-white drop-shadow-md'}`}
           ref={tileGhostRef}
         >
