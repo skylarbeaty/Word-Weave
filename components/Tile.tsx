@@ -23,12 +23,13 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
   
   let bgStyle = "bg-indigo-600"
   if (gameContext.solution.solutionTiles.has(myTile.id))
-      bgStyle = "bg-emerald-700"
+    bgStyle = "bg-emerald-700"
   else if (gameContext.solution.disconnectedValidTiles.has(myTile.id))
-      bgStyle = "bg-indigo-900"
+    bgStyle = "bg-teal-500"
+  if (gameContext.solution.errorTiles.has(myTile.id))
+    bgStyle = "bg-rose-500"
 
   useLayoutEffect(() => {
-    
     // handle window resize
     if (resized && mySpace.divRef && myTile.divRef && targetPos.current && prevPos.current && initPos.current){
       const rect = myTile.divRef.getBoundingClientRect()

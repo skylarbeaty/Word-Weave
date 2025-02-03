@@ -19,6 +19,7 @@ const solveBoard = (tiles: TileData[], spaces: SpaceData[], setSolution: React.D
     let solution: SolutionData = {
       solutionTiles: new Set<number>(),
       disconnectedValidTiles: new Set<number>(),
+      errorTiles: new Set<number>(),
       score: 0
     }
 
@@ -28,6 +29,9 @@ const solveBoard = (tiles: TileData[], spaces: SpaceData[], setSolution: React.D
         solution.score += word.word.length
       }else if (word.valid)//only add the valid words that arent in solution
         word.tileIDs.forEach(id => solution.disconnectedValidTiles.add(id))
+
+      if (!word.valid)
+        word.tileIDs.forEach(id => solution.errorTiles.add(id))
     }
 
     setSolution(solution)
@@ -105,12 +109,22 @@ const findConnectedWords = (words: WordData[]) => {
     let largestGraph = new Set<number>() // list of word IDs, words array holds connections by common *tile* ID
     let largestScore = 0
 
+    // only consider words where all tile placements are valid i.e. they dont create any invalid words
     const validWords = words.filter(word => word.valid)
+    const invalidWords = words.filter(word => !word.valid)
+    let usableWords: WordData[] = []
+    validWords.forEach(validWord => {
+      // only add to usable words if none if its tiles are shared with invalid words
+      if (!invalidWords.some(invalidWord => [...invalidWord.tileIDs].some(id => validWord.tileIDs.has(id))))
+        usableWords.push(validWord)
+    })
+
+    console.log("valid words: " + validWords.length + " usable words: " + usableWords.length + " invalid words: " + invalidWords.length) 
     
-    for (const word of validWords) {
+    for (const word of usableWords) {
         if(!visited.has(word.id)){
             // recursively search through every valid word that is connected to this word
-            const currentData = connectedWordDFS(word, validWords, visited, new Set(), 0)
+            const currentData = connectedWordDFS(word, usableWords, visited, new Set(), 0)
             // update data from DFS return
             visited = currentData.visited
             if (currentData.score > largestScore){
@@ -127,13 +141,13 @@ const findConnectedWords = (words: WordData[]) => {
     }))
 }
 
-const connectedWordDFS = (word: WordData, validWords: WordData[], visited: Set<number>, currentGraph: Set<number>, score: number) => {
+const connectedWordDFS = (word: WordData, usableWords: WordData[], visited: Set<number>, currentGraph: Set<number>, score: number) => {
     currentGraph.add(word.id)
     visited.add(word.id)
     score += word.word.length // score is currently just he length of the word, e.i. how many tiles were used to make it
 
     // neighboring words will share a tile ID
-    const neighbors = validWords.filter(
+    const neighbors = usableWords.filter(
         wordObj => wordObj.id != word.id && [...wordObj.tileIDs].some(id => word.tileIDs.has(id))
     )
 
@@ -141,7 +155,7 @@ const connectedWordDFS = (word: WordData, validWords: WordData[], visited: Set<n
     for (const neighbor of neighbors){
         if (!visited.has(neighbor.id)){
             // recursively call on each neighbor and pass the data up through returns
-            const result = connectedWordDFS(neighbor, validWords, visited, currentGraph, score)
+            const result = connectedWordDFS(neighbor, usableWords, visited, currentGraph, score)
             currentGraph = result.currentGraph
             score = result.score
             visited = result.visited

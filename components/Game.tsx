@@ -28,6 +28,7 @@ export interface SpaceData{
 export interface SolutionData{
     solutionTiles: Set<number>
     disconnectedValidTiles: Set<number>
+    errorTiles: Set<number>
     score: number
 }
 
@@ -98,6 +99,7 @@ const initialSpaces: SpaceData[] = [
 const initialSolution: SolutionData = {
     solutionTiles: new Set(),
     disconnectedValidTiles: new Set(),
+    errorTiles: new Set(),
     score: 0
 }
 
