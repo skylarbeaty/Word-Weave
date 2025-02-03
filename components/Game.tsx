@@ -53,9 +53,19 @@ export function useGameContext(){
 //                     "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D" ]
 
 // test letter set: fruits
-const letters = [   "A", "B", "O", "R", "E", "N", "G", "L", "P", "M",
-                    "N", "A", "A", "P", "A", "O", "R", "A", "N", "G",
-                    "E", "B", "N", "P", "E", "L", "M", "G", "P", "A" ]
+// const letters = [   "A", "B", "O", "R", "E", "N", "G", "L", "P", "M",
+//                     "N", "A", "A", "P", "A", "O", "R", "A", "N", "G",
+//                     "E", "B", "N", "P", "E", "L", "M", "G", "P", "A" ]
+
+// const letters = [   "J", "H", "R", "M", "I", "S", "B", "L", "T", "N",
+//                     "C", "O", "I", "D", "F", "O", "G", "N", "U", "P",
+//                     "P", "E", "E", "H", "A", "C", "L", "R", "I", "D" ];
+
+const letters = [   "S", "M", "T", "N", "N", "O", "R", "E", "G", "U",
+                    "C", "I", "L", "V", "D", "N", "T", "A", "S", "R",
+                    "E", "N", "G", "I", "C", "O", "A", "T", "A", "L" ];
+
+      
 
 const initialTiles: TileData[] = letters.map((letter,index) => { return {
     id: index + 1,
