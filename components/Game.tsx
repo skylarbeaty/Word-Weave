@@ -120,8 +120,8 @@ const Game = () => {
 
     return (
         <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace, dragID, changeDragID, solution}}>
-            <div className='game'>
-            <h1 className="text-4xl font-bold text-center mb-2 mt-1 xs:mt-2 text-indigo-900">Word Weave</h1>
+            <div className='game h-[100dvh]'>
+                <h1 className="text-4xl font-bold text-center mb-2 mt-1 xs:mt-2 text-indigo-900">Word Weave</h1>
                 <h2 className={`text-xl font-bold text-center m-2 ${solution.score == 0 ? "text-indigo-800" : "text-emerald-800"}`}>Score: {solution.score}</h2>
                 <Board/>
                 {/* <InputPanel/> */}
