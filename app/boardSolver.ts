@@ -11,11 +11,13 @@ interface WordData {
 }
 
 const solveBoard = (tiles: TileData[], spaces: SpaceData[], setSolution: React.Dispatch<React.SetStateAction<SolutionData>>) => {
+    // scan board and process words
     let words: WordData[] = []
     words = findWords(tiles, spaces)
-    words = validateWords(words)
-    words = findConnectedWords(words)
+    validateWords(words)
+    findConnectedWords(words)
 
+    // make solution
     let solution: SolutionData = {
       solutionTiles: new Set<number>(),
       disconnectedValidTiles: new Set<number>(),
@@ -98,10 +100,11 @@ const findWords = (tiles: TileData[], spaces: SpaceData[]) => {
 }
 
 const validateWords = (words: WordData[]) => {
-    return words.map(wordObj => ({
-        ...wordObj,
-        valid: wordList.has(wordObj.word.toLowerCase()), // check against local word list
-    }))
+    // check each word against the word list
+    words.forEach(wordObj => {
+      wordObj.valid = wordList.has(wordObj.word.toLowerCase())
+    })
+    return words
 }
 
 const findConnectedWords = (words: WordData[]) => {
@@ -126,7 +129,7 @@ const findConnectedWords = (words: WordData[]) => {
             // recursively search through every valid word that is connected to this word
             const currentData = connectedWordDFS(word, usableWords, visited, new Set(), 0)
             // update data from DFS return
-            visited = currentData.visited
+            console.log(visited.size)
             if (currentData.score > largestScore){
                 largestScore = currentData.score
                 largestGraph = currentData.currentGraph
@@ -135,10 +138,10 @@ const findConnectedWords = (words: WordData[]) => {
         }
     }
 
-    return words.map(word => ({
-        ...word,
-        connected: largestGraph.has(word.id)
-    }))
+    words.forEach(word => {
+      word.connected = largestGraph.has(word.id)
+    })
+    return words
 }
 
 const connectedWordDFS = (word: WordData, usableWords: WordData[], visited: Set<number>, currentGraph: Set<number>, score: number) => {
@@ -158,11 +161,10 @@ const connectedWordDFS = (word: WordData, usableWords: WordData[], visited: Set<
             const result = connectedWordDFS(neighbor, usableWords, visited, currentGraph, score)
             currentGraph = result.currentGraph
             score = result.score
-            visited = result.visited
         }
     }
 
-    return {currentGraph, score, visited}
+    return {currentGraph, score}
 }
 
 export const searchBoard = debounce(solveBoard, 300)
