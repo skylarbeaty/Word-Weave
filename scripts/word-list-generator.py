@@ -44,7 +44,8 @@ def passes_word_check(word):
     )
 
 filtered_words = {word for word in words if passes_word_filter(word)}
-checked_words = {word for word in filtered_words if passes_word_check(word)}
+checked_words = {word for word in filtered_words if passes_word_check(word)} # remove words on exclusion list
+checked_words.update(manual_include_words) # add any words from include list that werent in original set
 
 print("Sorting words...")
 
