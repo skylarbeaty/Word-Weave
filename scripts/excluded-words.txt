@@ -1,0 +1,21 @@
+lb: abbreviation
+ag: abberviation/symbol
+bc: initialization
+qt: abbreviation
+mo: abbreviation
+ed: abbreviation
+ax: abbreviation
+nb: initialization
+ni: abbreviation
+ism: suffix
+cdr: abbreviation
+esp: initialization
+etc: abbreviation
+erm: initialization
+lol: initialization
+arr
+ile: suffix
+www: initialization
+dob: initialization
+non: prefix
+gov: abbreviation
