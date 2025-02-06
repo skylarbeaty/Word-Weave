@@ -25,9 +25,9 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
   if (gameContext.solution.solutionTiles.has(myTile.id))
     bgStyle = "bg-emerald-700"
   else if (gameContext.solution.disconnectedValidTiles.has(myTile.id))
-    bgStyle = "bg-teal-500"
+    bgStyle = "bg-sky-400"
   if (gameContext.solution.errorTiles.has(myTile.id))
-    bgStyle = "bg-rose-500"
+    bgStyle = "bg-rose-400"
 
   let ringStyle = ""
   if (gameContext.selectedID == props.id)
