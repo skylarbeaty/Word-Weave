@@ -29,6 +29,10 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
   if (gameContext.solution.errorTiles.has(myTile.id))
     bgStyle = "bg-rose-500"
 
+  let ringStyle = ""
+  if (gameContext.selectedID == props.id)
+    ringStyle = "ring-4 ring-amber-300"
+
   useLayoutEffect(() => {
     // handle window resize
     if (resized && mySpace.divRef && myTile.divRef && targetPos.current && prevPos.current && initPos.current){
@@ -95,14 +99,27 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
 
   const handlePointerMove = (e: PointerEvent) => {
     e.preventDefault() 
+    gameContext.changeSelectedID(-1)
     setGhostReady(true);
     updateGhost(e.clientX - mouseDelta.x, e.clientY - mouseDelta.y)
   }
 
   const handlePointerUp = (e: PointerEvent) => {
+    //handle dragging
     e.preventDefault() 
     gameContext.changeDragID(-1)
     setGhostReady(false);
+    
+    // handle click
+    const rect = myTile.divRef?.getBoundingClientRect()
+    if (rect && e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+      if (gameContext.selectedID === props.id){ // deselect if you tap a selected tile
+        gameContext.changeSelectedID(-1)
+      }else{
+        gameContext.changeSelectedID(props.id)
+      }
+    }
+
     document.removeEventListener("pointermove", handlePointerMove)
     document.removeEventListener("pointerup", handlePointerUp)
   }
@@ -120,6 +137,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
         ${ready && `${bgStyle} text-white drop-shadow-md`}
         ${gameContext.dragID === myTile.id && "animate-pulse"}
         ${gameContext.dragID === -1 ? "draggable" : "dragging"}
+        ${ringStyle}
         `}
         ref={ref}
         onPointerDown={handlePointerDown}

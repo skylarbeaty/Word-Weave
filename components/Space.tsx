@@ -22,7 +22,7 @@ const Space = ({id}: SpaceProps) => {
 
   const handlePointerEnter = (e: React.PointerEvent) => {
     e.preventDefault() 
-    if (gameContext.dragID != -1)
+    if (gameContext.dragID != -1 || gameContext.selectedID != -1)
       setMouseHover(true)
   }
 
@@ -36,6 +36,9 @@ const Space = ({id}: SpaceProps) => {
     if (gameContext.dragID != -1){
       gameContext.moveTile(gameContext.dragID, id)
       setMouseHover(false)
+    }else if (gameContext.selectedID != -1){
+      gameContext.moveTile(gameContext.selectedID, id)
+      gameContext.changeSelectedID(-1)
     }
   }
 

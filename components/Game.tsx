@@ -39,6 +39,8 @@ interface GameContextProps{
     updateSpace: (id: number, ref: HTMLDivElement | null) => void;
     dragID: number
     changeDragID: (id: number) => void;
+    selectedID: number
+    changeSelectedID: (id: number) => void;
     solution: SolutionData
 }
 
@@ -106,6 +108,7 @@ const initialSolution: SolutionData = {
 const Game = () => {
     const [tiles, setTiles] = useState<TileData[]>(initialTiles)
     const [dragID, setDragID] = useState(-1)
+    const [selectedID, setSelectedID] = useState(-1)
     const spaces = useRef<SpaceData[]>(initialSpaces)
     const [solution, setSolution] = useState<SolutionData>(initialSolution)
 
@@ -129,9 +132,13 @@ const Game = () => {
     const changeDragID = (id: number) =>{
         setDragID(id)
     }
+    
+    const changeSelectedID = (id: number) =>{
+        setSelectedID(id)
+    }
 
     return (
-        <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace, dragID, changeDragID, solution}}>
+        <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace, dragID, changeDragID, selectedID, changeSelectedID, solution}}>
             <div className='game h-[100dvh]'>
                 <h1 className="text-4xl font-bold text-center mb-2 mt-1 xs:mt-2 text-indigo-900">Word Weave</h1>
                 <h2 className={`text-xl font-bold text-center m-2 ${solution.score == 0 ? "text-indigo-800" : "text-emerald-800"}`}>Score: {solution.score}</h2>
