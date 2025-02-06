@@ -121,15 +121,12 @@ const findConnectedWords = (words: WordData[]) => {
       if (!invalidWords.some(invalidWord => [...invalidWord.tileIDs].some(id => validWord.tileIDs.has(id))))
         usableWords.push(validWord)
     })
-
-    console.log("valid words: " + validWords.length + " usable words: " + usableWords.length + " invalid words: " + invalidWords.length) 
     
     for (const word of usableWords) {
         if(!visited.has(word.id)){
             // recursively search through every valid word that is connected to this word
             const currentData = connectedWordDFS(word, usableWords, visited, new Set(), 0)
             // update data from DFS return
-            console.log(visited.size)
             if (currentData.score > largestScore){
                 largestScore = currentData.score
                 largestGraph = currentData.currentGraph
