@@ -139,7 +139,7 @@ const Game = () => {
 
     return (
         <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace, dragID, changeDragID, selectedID, changeSelectedID, solution}}>
-            <div className={`game h-[100dvh]  justify-self-center
+            <div className={`game h-[window.innerHeight]  justify-self-center
                 max-w-[240px] xs-box:max-w-[340px]  sm-box:max-w-[450px]  md-box:max-w-full`}>
                 <h1 className={`font-bold text-center mb-2 mt-1 xs:mt-2 text-indigo-900
                     text-lg xs-box:text-xl sm-box:text-2xl md-box:text-4xl`}>
