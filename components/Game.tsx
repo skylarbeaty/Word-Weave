@@ -139,9 +139,17 @@ const Game = () => {
 
     return (
         <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace, dragID, changeDragID, selectedID, changeSelectedID, solution}}>
-            <div className='game h-[100dvh]'>
-                <h1 className="text-4xl font-bold text-center mb-2 mt-1 xs:mt-2 text-indigo-900">Word Weave</h1>
-                <h2 className={`text-xl font-bold text-center m-2 ${solution.score == 0 ? "text-indigo-800" : "text-emerald-800"}`}>Score: {solution.score}</h2>
+            <div className={`game h-[100dvh]  justify-self-center
+                max-w-[240px] xs-box:max-w-[340px]  sm-box:max-w-[450px]  md-box:max-w-full`}>
+                <h1 className={`font-bold text-center mb-2 mt-1 xs:mt-2 text-indigo-900
+                    text-lg xs-box:text-xl sm-box:text-2xl md-box:text-4xl`}>
+                        Word Weave
+                </h1>
+                <h2 className={`text-xl font-bold text-center m-2 
+                    text-sm xs-box:text-base sm-box:text-xl md-box:text-2xl
+                    ${solution.score == 0 ? "text-indigo-800" : "text-emerald-800"}`}>
+                        Score: {solution.score}
+                </h2>
                 <Board/>
                 {/* <InputPanel/> */}
                 <ButtonPanel/>

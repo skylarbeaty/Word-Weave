@@ -39,18 +39,29 @@ const ButtonPanel = () => {
   }
 
   return (
-    <div className='bg-indigo-200 mt-2 m-1 sm:m-0 sm:mb-2 p-1 sm:p-4 rounded shadow-lg flex justify-between'>
-        <button className='bg-indigo-800 text-white p-2 m-1 sm:m-0 rounded-lg min-w-20 sm:min-w-28 text-l sm:text-xl'
+    <div className={`bg-indigo-200 mt-2 mb-2 rounded shadow-lg flex justify-between  justify-self-center
+        p-[2px]   xs-box:p-[4px]    sm-box:p-[8px]    md-box:p-[16px]
+        gap-[2px] xs-box:gap-[4px]  sm-box:gap-[6px]  md-box:gap-[8px]`}>
+        <button className={`bg-indigo-800 text-white rounded-lg
+          min-w-10 xs-box:min-w-15 sm-box:min-w-20 md-box:min-w-24
+          p-[2px]   xs-box:p-[4px]    sm-box:p-[8px]    md-box:p-[16px]
+          text-[0.3rem] xs-box:text-[0.6rem] sm-box:text-[0.9rem] md-box:text-[1.1rem]`}
           onPointerDown={handleReturn}
         >
           Return
         </button>
-        <button className='bg-indigo-800 text-white p-2 m-1 sm:m-0 rounded-lg min-w-20 sm:min-w-28 text-l sm:text-xl'
+        <button className={`bg-indigo-800 text-white rounded-lg
+          min-w-10 xs-box:min-w-15 sm-box:min-w-20 md-box:min-w-24
+          p-[2px]   xs-box:p-[4px]    sm-box:p-[8px]    md-box:p-[16px]
+          text-[0.3rem] xs-box:text-[0.6rem] sm-box:text-[0.9rem] md-box:text-[1.1rem]`}
           onPointerDown={debounce(handleShuffle, 100)}
         >
           Shuffle
         </button>
-        <button className='bg-indigo-800 text-white p-2 m-1 sm:m-0 rounded-lg min-w-20 sm:min-w-28 text-l sm:text-xl'
+        <button className={`bg-indigo-800 text-white rounded-lg
+          min-w-10 xs-box:min-w-15 sm-box:min-w-20 md-box:min-w-24
+          p-[2px]   xs-box:p-[4px]    sm-box:p-[8px]    md-box:p-[16px]
+          text-[0.3rem] xs-box:text-[0.6rem] sm-box:text-[0.9rem] md-box:text-[1.1rem]`}
           onPointerDown={handleRestart}
         >
           Restart

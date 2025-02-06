@@ -13,7 +13,10 @@ export default {
         foreground: "var(--foreground)",
       },
       screens: {
-        xs: "395px",
+        'xs-box': { 'raw': '(min-width: 310px) and (min-height: 660px)'}, 
+        'sm-box': { 'raw': '(min-width: 400px) and (min-height: 900px)'}, 
+        'md-box': { 'raw': '(min-width: 520px) and (min-height: 1100px)'}, 
+        'lg-box': { 'raw': '(min-width: 550px) and (min-height: 1400px)'}, 
       },
     },
   },

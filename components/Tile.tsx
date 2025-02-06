@@ -31,7 +31,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
 
   let ringStyle = ""
   if (gameContext.selectedID == props.id)
-    ringStyle = "ring-4 ring-amber-300"
+    ringStyle = "ring-amber-300 ring-1 xs-box:ring-2 sm-box:ring-3 md-box:ring-4"
 
   useLayoutEffect(() => {
     // handle window resize
@@ -133,7 +133,9 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
 
   return (
     <>
-      <div className={`w-6 h-6 xs:w-9 xs:h-9 sm:w-10 sm:h-10 flex fixed items-center justify-center rounded
+      <div className={`flex fixed items-center justify-center rounded
+        w-4 h-4 xs-box:w-6 xs-box:h-6 sm-box:w-8 sm-box:h-8 md-box:w-10 md-box:h-10
+        text-[0.5rem] xs-box:text-[0.7rem] sm-box:text-[0.9rem] md-box:text-[1rem]
         ${ready && `${bgStyle} text-white drop-shadow-md`}
         ${gameContext.dragID === myTile.id && "animate-pulse"}
         ${gameContext.dragID === -1 ? "draggable" : "dragging"}
@@ -146,7 +148,9 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
       </div>
       {gameContext.dragID === myTile.id &&
         // ghost tile that follows the cursor when dragging
-        <div className={`dragging pointer-events-none touch-none w-8 h-8 sm:w-10 sm:h-10 flex fixed items-center justify-center rounded 
+        <div className={`dragging pointer-events-none touch-none flex fixed items-center justify-center rounded 
+          w-4 h-4 xs-box:w-6 xs-box:h-6 sm-box:w-8 sm-box:h-8 md-box:w-10 md-box:h-10
+          text-[0.5rem] xs-box:text-[0.7rem] sm-box:text-[0.9rem] md-box:text-[1rem]
           ${ghostReady && 'bg-indigo-400 animate-pulse text-white drop-shadow-md'}`}
           ref={tileGhostRef}
         >

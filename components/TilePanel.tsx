@@ -6,15 +6,15 @@ const TilePanel = () => {
   const mySpaces = useGameContext()!.spaces.filter(space => space.position.container == "panel")
 
   return (
-    <div className="bg-indigo-300 p-1 m-1 sm:m-0 sm:p-4 rounded shadow-lg">
-      <div id="panel" className="grid grid-cols-10 gap-1 sm:gap-2 min-h-10">
-          {mySpaces.map((space, index) => (
-              <Space 
-                key={space.id} 
-                id={space.id}
-              />
-          ))}
-      </div>
+    <div id="panel" className={`grid grid-cols-10 justify-self-center bg-indigo-300 rounded shadow-lg
+        p-[2px]   xs-box:p-[4px]    sm-box:p-[8px]    md-box:p-[16px]
+        gap-[2px] xs-box:gap-[4px]  sm-box:gap-[6px]  md-box:gap-[8px]`}>
+        {mySpaces.map((space, index) => (
+            <Space 
+              key={space.id} 
+              id={space.id}
+            />
+        ))}
     </div>
   )
 }
