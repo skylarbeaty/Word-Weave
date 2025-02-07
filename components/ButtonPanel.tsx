@@ -23,6 +23,12 @@ const ButtonPanel = () => {
     })
   }
 
+  const returnDisabled = () => {//check whether there are any tiles to return
+    return tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "board")
+                .filter(tile => !solution.solutionTiles.has(tile.id))
+                .length === 0
+  }
+
   const handleRestart = () => {
     tiles.forEach(tile => {
       moveTile(tile.id, tile.id + 140) // move each tile to its original location
@@ -42,7 +48,7 @@ const ButtonPanel = () => {
     <div className={`bg-indigo-200 mt-2 mb-2 rounded shadow-lg flex justify-between  justify-self-center
         p-[2px]   xs-box:p-[4px]    sm-box:p-[8px]    md-box:p-[16px]
         gap-[2px] xs-box:gap-[4px]  sm-box:gap-[6px]  md-box:gap-[8px]`}>
-        <GameButton handlePointerDown={handleReturn}>
+        <GameButton handlePointerDown={handleReturn} disabled={returnDisabled()}>
           <img
             src="/return.svg"
             alt="return"
