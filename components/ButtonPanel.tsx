@@ -44,8 +44,40 @@ const ButtonPanel = () => {
     })
   }
 
+  const handleDeselect = () => {
+    gameContext.changeSelectedID(-1)
+  }
+
+  const deselectDisabled = () => {
+    return (gameContext.selectedID === -1)
+  }
+
+  const handleMove = () => {
+    
+  }
+
+  const handleUndo = () => {
+
+  }
+
+  const handleRedo = () => {
+
+  }
+
+  const handleSetStar = () => {
+
+  }
+
+  const handleSubmit = () => {
+
+  }
+
+  const submitDisabled = () => {
+    return (solution.score === 0)
+  }
+
   return (
-    <div className={`bg-indigo-200 mt-2 mb-2 rounded shadow-lg flex justify-between  justify-self-center
+    <div className={`bg-indigo-200 mt-2 mb-2 rounded-lg shadow-lg flex justify-between  justify-self-center
         p-[2px]   xs-box:p-[4px]    sm-box:p-[8px]    md-box:p-[16px]
         gap-[2px] xs-box:gap-[4px]  sm-box:gap-[6px]  md-box:gap-[8px]`}>
         <GameButton handlePointerDown={handleReturn} disabled={returnDisabled()}>
@@ -60,10 +92,46 @@ const ButtonPanel = () => {
             alt="shuffle"
           />
         </GameButton>
+        <GameButton handlePointerDown={handleDeselect} disabled={deselectDisabled()}>
+          <img
+            src="/deselect.svg"
+            alt="deselect"
+          />
+        </GameButton>
+        <GameButton handlePointerDown={handleMove}>
+          <img
+            src="/move.svg"
+            alt="move"
+          />
+        </GameButton>
+        <GameButton handlePointerDown={handleUndo}>
+          <img
+            src="/undo.svg"
+            alt="undo"
+          />
+        </GameButton>
+        <GameButton handlePointerDown={handleRedo}>
+          <img
+            src="/redo.svg"
+            alt="redo"
+          />
+        </GameButton>
         <GameButton handlePointerDown={handleRestart}>
           <img
             src="/restart.svg"
             alt="restart"
+          />
+        </GameButton>
+        <GameButton handlePointerDown={handleSetStar}>
+          <img
+            src="/star.svg"
+            alt="star"
+          />
+        </GameButton>
+        <GameButton handlePointerDown={handleSubmit} disabled={submitDisabled()}>
+          <img
+            src="/launch.svg"
+            alt="submit"
           />
         </GameButton>
     </div>
