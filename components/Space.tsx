@@ -11,7 +11,7 @@ const Space = ({id}: SpaceProps) => {
   const [mouseHover, setMouseHover] = useState<boolean>(false)
 
   let myTile = gameContext.tiles.find(tile => tile.spaceID === id)
-  let myBG = `border-indigo-400 border border-dashed`
+  let myBG = `border-indigo-400 border border-dotted xs-box:border-dashed`
   if (myTile)
       myBG = ``
 
