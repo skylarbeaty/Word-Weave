@@ -139,29 +139,37 @@ const Game = () => {
 
     return (
         <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace, dragID, changeDragID, selectedID, changeSelectedID, solution}}>
-            <div className={`game h-[window.innerHeight]  justify-self-center
-                max-w-[240px] xs-box:max-w-[340px]  sm-box:max-w-[450px]  md-box:max-w-full`}>
-                <h1 className={`font-bold text-center mb-2 mt-1 xs:mt-2 text-indigo-900
-                    text-lg xs-box:text-xl sm-box:text-2xl md-box:text-4xl`}>
-                        Word Weave
-                </h1>
-                <h2 className={`text-xl font-bold text-center m-2 
-                    text-sm xs-box:text-base sm-box:text-xl md-box:text-2xl
-                    ${solution.score == 0 ? "text-indigo-800" : "text-emerald-800"}`}>
-                        Score: {solution.score}
-                </h2>
-                <Board/>
-                {/* <InputPanel/> */}
-                <ButtonPanel/>
-                <TilePanel/>
-                {tiles.map((tile, index) => (
-                    <Tile
-                        ref={(el: HTMLDivElement | null) => {tiles[index].divRef = el}}
-                        key={tile.id} 
-                        id={tile.id} 
-                        letter={tile.letter} 
-                    />
-                ))}
+            <div className={`game h-svh  justify-self-center flex flex-col justify-between md-box:justify-center
+                max-w-full
+                
+                `}>
+                <div>
+                    <h1 className={`font-bold text-center mb-2 mt-1 xs:mt-2 text-indigo-900
+                        text-lg xs-box:text-xl sm-box:text-2xl md-box:text-4xl`}>
+                            Word Weave
+                    </h1>
+                    <h2 className={`text-xl font-bold text-center m-2 
+                        text-xs xs-box:text-base sm-box:text-xl md-box:text-2xl
+                        ${solution.score == 0 ? "text-indigo-800" : "text-emerald-800"}`}>
+                            Score: {solution.score}
+                    </h2>
+                </div>
+                <div>
+                    <Board/>
+                </div>
+                <div className='mb-16'>
+                    {/* <InputPanel/> */}
+                    <ButtonPanel/>
+                    <TilePanel/>
+                    {tiles.map((tile, index) => (
+                        <Tile
+                            ref={(el: HTMLDivElement | null) => {tiles[index].divRef = el}}
+                            key={tile.id} 
+                            id={tile.id} 
+                            letter={tile.letter} 
+                        />
+                    ))}
+                </div>
             </div>
         </GameContext.Provider>
     )
