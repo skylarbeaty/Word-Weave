@@ -7,7 +7,7 @@ interface TileProps {
 }
 
 const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
-  const targetPos = useRef<{ left: number; top: number } | null>(null)
+  const targetPos = useRef<{ left: number, top: number } | null>(null)
   const prevPos = useRef<{left: number, top: number} | null>(null)
   const initPos = useRef<{left: number, top: number} | null>(null)
   const tileGhostRef = useRef<HTMLDivElement | null>(null)
@@ -81,8 +81,8 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
     }
     setReady(true)
 
-    window.addEventListener("resize", () => {setResized(true)});
-    return () => window.removeEventListener("resize", () => {setResized(true)});
+    window.addEventListener("resize", () => {setResized(true)})
+    return () => window.removeEventListener("resize", () => {setResized(true)})
   }, [myTile?.spaceID, gameContext.spaces])
 
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -100,7 +100,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
   const handlePointerMove = (e: PointerEvent) => {
     e.preventDefault() 
     gameContext.changeSelectedID(-1)
-    setGhostReady(true);
+    setGhostReady(true)
     updateGhost(e.clientX - mouseDelta.x, e.clientY - mouseDelta.y)
   }
 
@@ -108,7 +108,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
     //handle dragging
     e.preventDefault() 
     gameContext.changeDragID(-1)
-    setGhostReady(false);
+    setGhostReady(false)
     
     // handle click
     const rect = myTile.divRef?.getBoundingClientRect()

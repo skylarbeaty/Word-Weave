@@ -1,5 +1,5 @@
 import React from 'react'
-import { useGameContext } from './Game';
+import { useGameContext } from './Game'
 import Space from './Space'
 
 const Board = () => {

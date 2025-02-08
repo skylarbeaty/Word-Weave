@@ -1,5 +1,5 @@
 import { useRef, useLayoutEffect, useState } from 'react'
-import { useGameContext } from './Game';
+import { useGameContext } from './Game'
 
 interface SpaceProps {
   id: number

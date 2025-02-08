@@ -98,7 +98,7 @@ const ButtonPanel = () => {
             alt="deselect"
           />
         </GameButton>
-        <GameButton handlePointerDown={handleMove}>
+        {/* <GameButton handlePointerDown={handleMove}>
           <img
             src="/move.svg"
             alt="move"
@@ -115,14 +115,14 @@ const ButtonPanel = () => {
             src="/redo.svg"
             alt="redo"
           />
-        </GameButton>
+        </GameButton> */}
         <GameButton handlePointerDown={handleRestart}>
           <img
             src="/restart.svg"
             alt="restart"
           />
         </GameButton>
-        <GameButton handlePointerDown={handleSetStar}>
+        {/* <GameButton handlePointerDown={handleSetStar}>
           <img
             src="/star.svg"
             alt="star"
@@ -133,7 +133,7 @@ const ButtonPanel = () => {
             src="/launch.svg"
             alt="submit"
           />
-        </GameButton>
+        </GameButton> */}
     </div>
   )
 }

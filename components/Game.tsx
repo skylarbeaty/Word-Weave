@@ -1,13 +1,13 @@
 "use client"
-import { useState, createContext, useCallback, useContext, useRef, useEffect } from 'react';
+import { useState, createContext, useCallback, useContext, useRef, useEffect } from 'react'
 
-import "@/app/game.css";
-import Tile from './Tile';
-import TilePanel from './TilePanel';
-import Board from './Board';
-import InputPanel from '@/components/InputPanel';
-import ButtonPanel from '@/components/ButtonPanel';
-import { searchBoard } from '@/app/boardSolver';
+import "@/app/game.css"
+import Tile from './Tile'
+import TilePanel from './TilePanel'
+import Board from './Board'
+import InputPanel from '@/components/InputPanel'
+import ButtonPanel from '@/components/ButtonPanel'
+import { searchBoard } from '@/app/boardSolver'
 
 export interface TileData{
     id: number
@@ -36,11 +36,11 @@ interface GameContextProps{
     tiles: TileData[]
     moveTile: (id: number, newSpaceID: number) => void
     spaces: SpaceData[]
-    updateSpace: (id: number, ref: HTMLDivElement | null) => void;
+    updateSpace: (id: number, ref: HTMLDivElement | null) => void
     dragID: number
-    changeDragID: (id: number) => void;
+    changeDragID: (id: number) => void
     selectedID: number
-    changeSelectedID: (id: number) => void;
+    changeSelectedID: (id: number) => void
     solution: SolutionData
 }
 
@@ -62,11 +62,11 @@ export function useGameContext(){
 
 // const letters = [   "J", "H", "R", "M", "I", "S", "B", "L", "T", "N",
 //                     "C", "O", "I", "D", "F", "O", "G", "N", "U", "P",
-//                     "P", "E", "E", "H", "A", "C", "L", "R", "I", "D" ];
+//                     "P", "E", "E", "H", "A", "C", "L", "R", "I", "D" ]
 
 const letters = [   "S", "M", "T", "N", "N", "O", "R", "E", "G", "U",
                     "C", "I", "L", "V", "D", "N", "T", "A", "S", "R",
-                    "E", "N", "G", "I", "C", "O", "A", "T", "A", "L" ];
+                    "E", "N", "G", "I", "C", "O", "A", "T", "A", "L" ]
 
       
 
@@ -137,8 +137,14 @@ const Game = () => {
         setSelectedID(id)
     }
 
+    const GameContextProps = { 
+        tiles, moveTile, spaces: spaces.current, updateSpace,
+        dragID, changeDragID, selectedID, changeSelectedID,
+        solution: solution
+    }
+
     return (
-        <GameContext.Provider value={{tiles, moveTile, spaces: spaces.current, updateSpace, dragID, changeDragID, selectedID, changeSelectedID, solution}}>
+        <GameContext.Provider value={{...GameContextProps}}>
             <div className={`game h-svh  justify-self-center flex flex-col justify-between md-box:justify-center
                 max-w-full
                 

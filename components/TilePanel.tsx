@@ -1,6 +1,6 @@
 import React from 'react'
-import { useGameContext } from './Game';
-import Space from './Space';
+import { useGameContext } from './Game'
+import Space from './Space'
 
 const TilePanel = () => {
   const mySpaces = useGameContext()!.spaces.filter(space => space.position.container == "panel")
