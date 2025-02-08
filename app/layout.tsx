@@ -14,7 +14,7 @@ export const viewport: Viewport = {
 export default function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>
+      <body className={`h-svh w-svw`}>
         {children}
       </body>
     </html>
