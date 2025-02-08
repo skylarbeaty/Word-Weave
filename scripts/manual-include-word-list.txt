@@ -21,6 +21,22 @@ ut
 wo
 yo
 za
+is
+al
+ai
+ar
+ay
+ef
+es
+gi
+li
+mm
+os
+oy
+si
+te
+xu
+xe
 tut
 awe
 sea
@@ -107,6 +123,19 @@ hell
 keps
 mach
 flap
+ab: missing
+or: missing
 net: missing
+xem: missing
+xyr: missing
+xemself: missing
+ze: missing
+zem: missing
+zir: missing
+zemshelf: missing
+fae: missing
+faer: missing
+faers: missing
+faerself: missing
 minotaur: missing
 minotaurs: missing
