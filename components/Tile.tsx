@@ -103,7 +103,11 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
 
   const handlePointerMove = (e: PointerEvent) => {
     e.preventDefault() 
-    updateSelection(-1)
+    const rect = myTile.divRef?.getBoundingClientRect()
+    if (rect && (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom)) {
+      updateSelection(-1)//if commited to dragging, cancel selection
+    }
+    
     setGhostReady(true)
     updateGhost(e.clientX - mouseDelta.x, e.clientY - mouseDelta.y)
   }
