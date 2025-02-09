@@ -9,6 +9,8 @@ const ButtonPanel = () => {
   const spaces = gameContext.spaces
   const solution = gameContext.solution
   const moveTiles = gameContext.moveTiles
+  const selection = gameContext.selection
+  const updateSelection = gameContext.updateSelection
   const boardLength = gameContext.gameProps.boardSize.width * gameContext.gameProps.boardSize.height
 
   const handleReturn = () => {
@@ -52,11 +54,11 @@ const ButtonPanel = () => {
   }
 
   const handleDeselect = () => {
-    gameContext.changeSelectedID(-1)
+    updateSelection(-1)
   }
 
   const deselectDisabled = () => {
-    return (gameContext.selectedID === -1)
+    return (!selection || selection.length === 0)
   }
 
   const handleMove = () => {

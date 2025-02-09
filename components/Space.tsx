@@ -9,8 +9,8 @@ const Space = ({id}: SpaceProps) => {
   const gameContext = useGameContext()!
   const moveTiles = gameContext.moveTiles
   const dragID = gameContext.dragID
-  const selectedID = gameContext.selectedID
-  const changeSelectedID = gameContext.changeSelectedID
+  const selection = gameContext.selection
+  const updateSelection = gameContext.updateSelection
 
   const divRef =  useRef<HTMLDivElement | null>(null)
   const [mouseHover, setMouseHover] = useState<boolean>(false)
@@ -27,7 +27,7 @@ const Space = ({id}: SpaceProps) => {
 
   const handlePointerEnter = (e: React.PointerEvent) => {
     e.preventDefault() 
-    if (gameContext.dragID != -1 || gameContext.selectedID != -1)
+    if (dragID != -1 || (selection && selection.length > 0))
       setMouseHover(true)
   }
 
@@ -41,9 +41,9 @@ const Space = ({id}: SpaceProps) => {
     if (gameContext.dragID != -1){
       moveTiles([{id: dragID, spaceID: id}])
       setMouseHover(false)
-    }else if (selectedID != -1){
-      moveTiles([{id: selectedID, spaceID: id}])
-      changeSelectedID(-1)
+    }else if (selection && selection.length > 0){
+      moveTiles([{id: selection[0], spaceID: id}])// move first selected tile
+      updateSelection(selection[0])// remove first tile from selection
     }
   }
 

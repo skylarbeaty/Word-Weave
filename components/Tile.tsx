@@ -19,6 +19,8 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
   const gameContext = useGameContext()!
   const myTile = gameContext.tiles[props.id - 1]
   const mySpace = gameContext.spaces[myTile.spaceID - 1]
+  const selection = gameContext.selection
+  const updateSelection = gameContext.updateSelection
   let mouseDelta = {x: 0, y: 0} // for dragging ghost image
   
   let bgStyle = "bg-indigo-600"
@@ -30,8 +32,10 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
     bgStyle = "bg-rose-400"
 
   let ringStyle = ""
-  if (gameContext.selectedID == props.id)
-    ringStyle = "ring-amber-300 ring-1 xs-box:ring-2 sm-box:ring-3 md-box:ring-4"
+  if (selection && selection[0] === props.id)// if first selected
+    ringStyle = "ring-amber-300 ring-1 xs-box:ring-2 sm-box:ring-[3px]"
+  else if (selection && selection.includes(props.id))// if in selection but not first
+    ringStyle = "outline-amber-300 outline-dashed outline-1 xs-box:outline-2 sm-box:outline-[3px]"
 
   useLayoutEffect(() => {
     // handle window resize
@@ -99,7 +103,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
 
   const handlePointerMove = (e: PointerEvent) => {
     e.preventDefault() 
-    gameContext.changeSelectedID(-1)
+    updateSelection(-1)
     setGhostReady(true)
     updateGhost(e.clientX - mouseDelta.x, e.clientY - mouseDelta.y)
   }
@@ -113,11 +117,7 @@ const Tile = forwardRef<HTMLDivElement, TileProps>((props, ref) => {
     // handle click
     const rect = myTile.divRef?.getBoundingClientRect()
     if (rect && e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
-      if (gameContext.selectedID === props.id){ // deselect if you tap a selected tile
-        gameContext.changeSelectedID(-1)
-      }else{
-        gameContext.changeSelectedID(props.id)
-      }
+      updateSelection(props.id)
     }
 
     document.removeEventListener("pointermove", handlePointerMove)

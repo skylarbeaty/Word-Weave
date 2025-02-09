@@ -47,8 +47,8 @@ interface GameContextProps{
     updateSpace: (id: number, ref: HTMLDivElement | null) => void
     dragID: number
     changeDragID: (id: number) => void
-    selectedID: number
-    changeSelectedID: (id: number) => void
+    selection: number[] | undefined
+    updateSelection: (id: number) => void
     solution: SolutionData
 }
 
@@ -102,7 +102,7 @@ const Game = ({ letters, boardSize }: GameProps) => {
     const spaces = useRef<SpaceData[]>(initialSpaces)
     const [solution, setSolution] = useState<SolutionData>(initialSolution)
     const [dragID, setDragID] = useState(-1)
-    const [selectedID, setSelectedID] = useState(-1)
+    const [selection, setSelection] = useState<number[]>()
 
     useEffect(() => {
         searchBoard(tiles, spaces.current, boardSize, setSolution)
@@ -125,15 +125,40 @@ const Game = ({ letters, boardSize }: GameProps) => {
     const changeDragID = (id: number) =>{
         setDragID(id)
     }
-    
-    const changeSelectedID = (id: number) =>{
-        setSelectedID(id)
+
+    const updateSelection = (tileID: number) => {
+        if (tileID == -1){//trigger to clear the selection
+            setSelection([])
+        }else if (selection && selection.length > 0){// if there is an existing selection
+            const tile = tiles.find(tile => tile.id === tileID)!
+            const firstTile = tiles.find(tile => tile.id === selection[0])!
+            const space = spaces.current.find(space => space.id === tile.spaceID)!
+            const firstSpace = spaces.current.find(space => space.id === firstTile.spaceID)!
+
+            if (space?.position.container === firstSpace.position.container){//if the tile is from the same container
+                setSelection(prevSelection => 
+                    prevSelection?.includes(tileID) 
+                        ? prevSelection.filter(id => id != tileID) // remove if it already exists
+                        : [...prevSelection!, tileID] // add if its not there
+                )
+            }else{// if the tile is in the opposite container
+                // swap the tile with the first tile
+                moveTiles([
+                    { id: firstTile.id, spaceID: tile.spaceID},
+                    { id: tile.id, spaceID: firstTile.spaceID}
+                ])
+                // remove the first tile from the selection
+                setSelection(prevSelection => prevSelection?.filter(id => id != firstTile.id))
+            }
+        }else{
+            setSelection([tileID])// first tile in selection
+        }        
     }
 
     const GameContextProps = { 
         gameProps: { letters, boardSize },
         tiles, moveTiles, spaces: spaces.current, updateSpace,
-        dragID, changeDragID, selectedID, changeSelectedID,
+        dragID, changeDragID, selection, updateSelection,
         solution: solution
     }
 
