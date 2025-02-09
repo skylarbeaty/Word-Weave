@@ -32,7 +32,15 @@ export interface SolutionData{
     score: number
 }
 
+const initialSolution: SolutionData = {
+    solutionTiles: new Set(),
+    disconnectedValidTiles: new Set(),
+    errorTiles: new Set(),
+    score: 0
+}
+
 interface GameContextProps{
+    gameProps: GameProps
     tiles: TileData[]
     moveTile: (id: number, newSpaceID: number) => void
     spaces: SpaceData[]
@@ -50,70 +58,54 @@ export function useGameContext(){
     return useContext(GameContext)
 }
 
-// test letter set: alphabeta
-// const letters = [   "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
-//                     "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
-//                     "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D" ]
-
-// test letter set: fruits
-// const letters = [   "A", "B", "O", "R", "E", "N", "G", "L", "P", "M",
-//                     "N", "A", "A", "P", "A", "O", "R", "A", "N", "G",
-//                     "E", "B", "N", "P", "E", "L", "M", "G", "P", "A" ]
-
-// const letters = [   "J", "H", "R", "M", "I", "S", "B", "L", "T", "N",
-//                     "C", "O", "I", "D", "F", "O", "G", "N", "U", "P",
-//                     "P", "E", "E", "H", "A", "C", "L", "R", "I", "D" ]
-
-const letters = [   "S", "M", "T", "N", "N", "O", "R", "E", "G", "U",
-                    "C", "I", "L", "V", "D", "N", "T", "A", "S", "R",
-                    "E", "N", "G", "I", "C", "O", "A", "T", "A", "L" ]
-
-      
-
-const initialTiles: TileData[] = letters.map((letter,index) => { return {
-    id: index + 1,
-    letter: letter,
-    divRef: null,
-    spaceID: index + 141
-}})
-
-const initialSpaces: SpaceData[] = [
-    // board spaces
-    ...Array.from({length: 140}, (_, index): SpaceData => ({
-        id: index + 1,
-        divRef: null,
-        position: {
-            container: "board",
-            index: index
-        }
-    })),
-    // tile panel spaces
-    ...Array.from({length: 30}, (_, index): SpaceData => ({
-        id: index + 141,
-        divRef: null,
-        position: {
-            container: "panel",
-            index: index
-        }
-    })),
-]
-
-const initialSolution: SolutionData = {
-    solutionTiles: new Set(),
-    disconnectedValidTiles: new Set(),
-    errorTiles: new Set(),
-    score: 0
+interface GameProps {
+    letters: string[]
+    boardSize: {
+        width: number
+        height: number
+    }
 }
 
-const Game = () => {
+const Game = ({ letters, boardSize }: GameProps) => {
+    const boardLength = boardSize.width * boardSize.height
+    const lettersLength = letters.length
+    
+    const initialTiles: TileData[] = letters.map((letter,index) => { return {
+        id: index + 1,
+        letter: letter,
+        divRef: null,
+        spaceID: index + boardLength + 1
+    }})
+    
+    const initialSpaces: SpaceData[] = [
+        // board spaces
+        ...Array.from({length: boardLength}, (_, index): SpaceData => ({
+            id: index + 1,
+            divRef: null,
+            position: {
+                container: "board",
+                index: index
+            }
+        })),
+        // tile panel spaces
+        ...Array.from({length: lettersLength}, (_, index): SpaceData => ({
+            id: index + boardLength + 1,
+            divRef: null,
+            position: {
+                container: "panel",
+                index: index
+            }
+        })),
+    ]
+
     const [tiles, setTiles] = useState<TileData[]>(initialTiles)
-    const [dragID, setDragID] = useState(-1)
-    const [selectedID, setSelectedID] = useState(-1)
     const spaces = useRef<SpaceData[]>(initialSpaces)
     const [solution, setSolution] = useState<SolutionData>(initialSolution)
+    const [dragID, setDragID] = useState(-1)
+    const [selectedID, setSelectedID] = useState(-1)
 
     useEffect(() => {
-        searchBoard(tiles, spaces.current, setSolution)
+        searchBoard(tiles, spaces.current, boardSize, setSolution)
     }, [tiles])
 
     const moveTile = (id: number, newSpaceID: number) => {
@@ -138,6 +130,7 @@ const Game = () => {
     }
 
     const GameContextProps = { 
+        gameProps: { letters, boardSize },
         tiles, moveTile, spaces: spaces.current, updateSpace,
         dragID, changeDragID, selectedID, changeSelectedID,
         solution: solution

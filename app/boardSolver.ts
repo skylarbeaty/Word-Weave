@@ -10,10 +10,10 @@ interface WordData {
     connected: boolean // is the word in the biggest connected graph of valid words
 }
 
-const solveBoard = (tiles: TileData[], spaces: SpaceData[], setSolution: React.Dispatch<React.SetStateAction<SolutionData>>) => {
+const solveBoard = (tiles: TileData[], spaces: SpaceData[], boardSize: {width: number, height: number}, setSolution: React.Dispatch<React.SetStateAction<SolutionData>>) => {
     // scan board and process words
     let words: WordData[] = []
-    words = findWords(tiles, spaces)
+    words = findWords(tiles, spaces, boardSize)
     validateWords(words)
     findConnectedWords(words)
 
@@ -39,11 +39,11 @@ const solveBoard = (tiles: TileData[], spaces: SpaceData[], setSolution: React.D
     setSolution(solution)
 }
 
-const findWords = (tiles: TileData[], spaces: SpaceData[]) => {
+const findWords = (tiles: TileData[], spaces: SpaceData[], boardSize: {width: number, height: number}) => {
     const boardTiles = tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "board")
   
     let words: WordData[] = []
-    let width = 10, height = 14
+    let width = boardSize.width, height = boardSize.height
     let id = 1
   
     // make 2D grid from board

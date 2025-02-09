@@ -9,6 +9,7 @@ const ButtonPanel = () => {
   const spaces = gameContext.spaces
   const solution = gameContext.solution
   const moveTile = gameContext.moveTile
+  const boardLength = gameContext.gameProps.boardSize.width * gameContext.gameProps.boardSize.height
 
   const handleReturn = () => {
     const boardTiles = tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "board")
@@ -31,7 +32,7 @@ const ButtonPanel = () => {
 
   const handleRestart = () => {
     tiles.forEach(tile => {
-      moveTile(tile.id, tile.id + 140) // move each tile to its original location
+      moveTile(tile.id, tile.id + boardLength) // move each tile to its original location
     })
   }
 
