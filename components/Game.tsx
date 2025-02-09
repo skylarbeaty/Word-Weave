@@ -42,7 +42,7 @@ const initialSolution: SolutionData = {
 interface GameContextProps{
     gameProps: GameProps
     tiles: TileData[]
-    moveTile: (id: number, newSpaceID: number) => void
+    moveTiles: (movements: {id: number, spaceID: number}[]) => void
     spaces: SpaceData[]
     updateSpace: (id: number, ref: HTMLDivElement | null) => void
     dragID: number
@@ -108,10 +108,11 @@ const Game = ({ letters, boardSize }: GameProps) => {
         searchBoard(tiles, spaces.current, boardSize, setSolution)
     }, [tiles])
 
-    const moveTile = (id: number, newSpaceID: number) => {
-        setTiles(prevTiles => prevTiles.map(tile => 
-            tile.id === id ? {...tile, spaceID: newSpaceID} : tile
-        ))
+    const moveTiles = (movements: {id: number, spaceID: number}[]) => {
+        setTiles(prevTiles => prevTiles.map(tile => {
+            const movement = movements.find(movement => movement.id === tile.id)
+            return movement ? {...tile, spaceID: movement.spaceID} : tile
+        }))
     }
 
     const updateSpace = useCallback((id: number, ref: HTMLDivElement | null) => {
@@ -131,7 +132,7 @@ const Game = ({ letters, boardSize }: GameProps) => {
 
     const GameContextProps = { 
         gameProps: { letters, boardSize },
-        tiles, moveTile, spaces: spaces.current, updateSpace,
+        tiles, moveTiles, spaces: spaces.current, updateSpace,
         dragID, changeDragID, selectedID, changeSelectedID,
         solution: solution
     }

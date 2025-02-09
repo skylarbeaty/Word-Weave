@@ -7,6 +7,11 @@ interface SpaceProps {
 
 const Space = ({id}: SpaceProps) => {
   const gameContext = useGameContext()!
+  const moveTiles = gameContext.moveTiles
+  const dragID = gameContext.dragID
+  const selectedID = gameContext.selectedID
+  const changeSelectedID = gameContext.changeSelectedID
+
   const divRef =  useRef<HTMLDivElement | null>(null)
   const [mouseHover, setMouseHover] = useState<boolean>(false)
 
@@ -34,11 +39,11 @@ const Space = ({id}: SpaceProps) => {
   const handlePointerUp = (e: React.PointerEvent) => {
     e.preventDefault() 
     if (gameContext.dragID != -1){
-      gameContext.moveTile(gameContext.dragID, id)
+      moveTiles([{id: dragID, spaceID: id}])
       setMouseHover(false)
-    }else if (gameContext.selectedID != -1){
-      gameContext.moveTile(gameContext.selectedID, id)
-      gameContext.changeSelectedID(-1)
+    }else if (selectedID != -1){
+      moveTiles([{id: selectedID, spaceID: id}])
+      changeSelectedID(-1)
     }
   }
 

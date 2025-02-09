@@ -8,7 +8,7 @@ const ButtonPanel = () => {
   const tiles = gameContext.tiles
   const spaces = gameContext.spaces
   const solution = gameContext.solution
-  const moveTile = gameContext.moveTile
+  const moveTiles = gameContext.moveTiles
   const boardLength = gameContext.gameProps.boardSize.width * gameContext.gameProps.boardSize.height
 
   const handleReturn = () => {
@@ -16,12 +16,12 @@ const ButtonPanel = () => {
     const returnTiles = boardTiles.filter(tile => !solution.solutionTiles.has(tile.id))
     let emptySpaces = spaces.filter(space => space.position.container === "panel" && !tiles.find(tile => tile.spaceID === space.id))
 
-    returnTiles.forEach(tile => {
-      if (emptySpaces.length > 0)
-        moveTile(tile.id, emptySpaces.shift()!.id) // move each tile to the next empty space
-      else
-        console.log("Error: No spaces left to return tiles")
-    })
+    const movements = returnTiles.map(tile => ({
+      id: tile.id,
+      spaceID: emptySpaces.shift()!.id
+    }))
+
+    moveTiles(movements)
   }
 
   const returnDisabled = () => {//check whether there are any tiles to return
@@ -31,18 +31,24 @@ const ButtonPanel = () => {
   }
 
   const handleRestart = () => {
-    tiles.forEach(tile => {
-      moveTile(tile.id, tile.id + boardLength) // move each tile to its original location
-    })
+    const movements = tiles.map(tile => ({
+      id: tile.id,
+      spaceID: tile.id + boardLength
+    }))
+
+    moveTiles(movements)
   }
 
   const handleShuffle = () => {
     const panelTiles = tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "panel")
     let unusedSpaces = shuffleArray(spaces.filter(space => space.position.container === "panel"))
 
-    panelTiles.forEach(tile => {
-      moveTile(tile.id, unusedSpaces.shift()!.id)
-    })
+    const movements = panelTiles.map(tile => ({
+      id: tile.id,
+      spaceID: unusedSpaces.shift()!.id
+    }))
+
+    moveTiles(movements)
   }
 
   const handleDeselect = () => {
