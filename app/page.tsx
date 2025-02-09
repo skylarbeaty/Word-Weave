@@ -1,10 +1,11 @@
 import Game from '@/components/Game';
 
-const letters = [   "S", "M", "T", "N", "N", "O", "R", "E", "G", "U",
-                    "C", "I", "L", "V", "D", "N", "T", "A", "S", "R",
-                    "E", "N", "G", "I", "C", "O", "A", "T", "A", "L" ]
 
-const boardSize={width:10, height:14}
+const letters = [   "M", "I", "O", "N", "H", "B", "K", "P", "G", "D",
+                    "L", "E", "C", "H", "S", "R", "A", "T", "U", "I",
+                    "G", "R", "O", "E", "Y", "E", "M", "A", "N", "K" ]
+
+const boardSize={width:10, height:10}
 
 export default function Home() {
   return (

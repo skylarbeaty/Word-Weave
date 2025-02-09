@@ -164,7 +164,7 @@ const Game = ({ letters, boardSize }: GameProps) => {
 
     return (
         <GameContext.Provider value={{...GameContextProps}}>
-            <div className={`game h-svh  justify-self-center flex flex-col justify-between md-box:justify-center
+            <div className={`game h-svh  justify-self-center flex flex-col justify-center
                 max-w-full
                 
                 `}>
