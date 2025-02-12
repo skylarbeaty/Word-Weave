@@ -12,6 +12,10 @@ const ButtonPanel = () => {
   const selection = gameContext.selection
   const updateSelection = gameContext.updateSelection
   const boardLength = gameContext.gameProps.boardSize.width * gameContext.gameProps.boardSize.height
+  const history = gameContext.history
+  const historyIndex = gameContext.historyIndex
+  const setHistoryIndex = gameContext.setHistoryIndex
+  const bestState = gameContext.bestState
 
   const handleReturn = () => {
     const boardTiles = tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "board")
@@ -66,6 +70,10 @@ const ButtonPanel = () => {
     moveTiles(movements)
   }
 
+  const restartDisbabled = () => {
+    return (JSON.stringify(history[0]) === JSON.stringify(history[historyIndex]))
+  }
+
   const handleShuffle = () => {
     const panelTiles = tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "panel")
     let unusedSpaces = shuffleArray(spaces.filter(space => space.position.container === "panel"))
@@ -75,7 +83,11 @@ const ButtonPanel = () => {
       spaceID: unusedSpaces.shift()!.id
     }))
 
-    moveTiles(movements)
+    moveTiles(movements, false)
+  }
+
+  const shuffleDisabled = () => {
+    return (tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "panel").length === 0)
   }
 
   const handleDeselect = () => {
@@ -91,15 +103,35 @@ const ButtonPanel = () => {
   }
 
   const handleUndo = () => {
+    if (historyIndex > 0){
+      setHistoryIndex(historyIndex - 1) // move index but preserve states for redo
+      moveTiles(history[historyIndex - 1], false)// index wont update till render
+    }
+  }
 
+  const undoDisabled = () => {
+    return (historyIndex <= 0)
   }
 
   const handleRedo = () => {
+    if (historyIndex < history.length - 1){
+      setHistoryIndex(historyIndex + 1)
+      moveTiles(history[historyIndex + 1], false)
+    }
+  }
 
+  const redoDisabled = () => {
+    return (historyIndex === history.length - 1)
   }
 
   const handleSetStar = () => {
-
+    if (bestState && bestState.state != history[historyIndex]){
+      moveTiles(bestState.state, true)
+    }
+  }
+  
+  const starDisabled = () => {
+    return bestState ? JSON.stringify(bestState.state) === JSON.stringify(history[historyIndex])  : true;
   }
 
   const handleSubmit = () => {
@@ -120,7 +152,7 @@ const ButtonPanel = () => {
             alt="return"
           />
         </GameButton>
-        <GameButton handlePointerDown={debounce(handleShuffle, 100)}>
+        <GameButton handlePointerDown={debounce(handleShuffle, 100)} disabled={shuffleDisabled()}>
           <img
             src="/shuffle.svg"
             alt="shuffle"
@@ -137,32 +169,32 @@ const ButtonPanel = () => {
             src="/move.svg"
             alt="move"
           />
-        </GameButton>
-        <GameButton handlePointerDown={handleUndo}>
+        </GameButton> */}
+        <GameButton handlePointerDown={handleUndo} disabled={undoDisabled()}>
           <img
             src="/undo.svg"
             alt="undo"
           />
         </GameButton>
-        <GameButton handlePointerDown={handleRedo}>
+        <GameButton handlePointerDown={handleRedo} disabled={redoDisabled()}>
           <img
             src="/redo.svg"
             alt="redo"
           />
-        </GameButton> */}
-        <GameButton handlePointerDown={handleRestart}>
+        </GameButton>
+        <GameButton handlePointerDown={handleRestart} disabled={restartDisbabled()}>
           <img
             src="/restart.svg"
             alt="restart"
           />
         </GameButton>
-        {/* <GameButton handlePointerDown={handleSetStar}>
+        <GameButton handlePointerDown={handleSetStar} disabled={starDisabled()}>
           <img
             src="/star.svg"
             alt="star"
           />
         </GameButton>
-        <GameButton handlePointerDown={handleSubmit} disabled={submitDisabled()}>
+        {/* <GameButton handlePointerDown={handleSubmit} disabled={submitDisabled()}>
           <img
             src="/launch.svg"
             alt="submit"

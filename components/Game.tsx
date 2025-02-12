@@ -39,16 +39,22 @@ const initialSolution: SolutionData = {
     score: 0
 }
 
+type TileState = { id: number, spaceID: number }[]
+
 interface GameContextProps{
     gameProps: GameProps
     tiles: TileData[]
-    moveTiles: (movements: {id: number, spaceID: number}[]) => void
+    moveTiles: (movements: {id: number, spaceID: number}[], saveToHistory?: boolean) => void
     spaces: SpaceData[]
     updateSpace: (id: number, ref: HTMLDivElement | null) => void
     dragID: number
     changeDragID: (id: number) => void
     selection: number[] | undefined
     updateSelection: (id: number) => void
+    history: TileState[]
+    historyIndex: number
+    setHistoryIndex: (value: number) => void
+    bestState: {state: TileState, score: number} | null
     solution: SolutionData
 }
 
@@ -98,21 +104,48 @@ const Game = ({ letters, boardSize }: GameProps) => {
         })),
     ]
 
+    const initialTileHistoy: TileState[] = [
+        initialTiles.map((
+            { id, spaceID }) => ({ id, spaceID }))
+    ]
+
     const [tiles, setTiles] = useState<TileData[]>(initialTiles)
     const spaces = useRef<SpaceData[]>(initialSpaces)
+
     const [solution, setSolution] = useState<SolutionData>(initialSolution)
     const [dragID, setDragID] = useState(-1)
     const [selection, setSelection] = useState<number[]>()
+    
+    const [tileHistory, setTileHistory] = useState<TileState[]>(initialTileHistoy)
+    const [historyIndex, setHistoryIndex] = useState(0)
+    const [bestState, setBestState] = useState<{state: TileState, score: number} | null>(null)
 
-    useEffect(() => {
+    useEffect(() => {// update solution when tiles change
         searchBoard(tiles, spaces.current, boardSize, setSolution)
     }, [tiles])
 
-    const moveTiles = (movements: {id: number, spaceID: number}[]) => {
-        setTiles(prevTiles => prevTiles.map(tile => {
-            const movement = movements.find(movement => movement.id === tile.id)
-            return movement ? {...tile, spaceID: movement.spaceID} : tile
-        }))
+    useEffect(() => {// update best state when solution changes
+        if ((!bestState && solution.score != 0) || (bestState?.score && solution.score > bestState?.score)) {
+            setBestState({state: tileHistory[historyIndex], score: solution.score})
+        }
+    }, [solution])
+
+    const moveTiles = (movements: {id: number, spaceID: number}[], saveToHistory = true) => {
+        setTiles(prevTiles => {
+            const newTiles = prevTiles.map(tile => {
+                const movement = movements.find(movement => movement.id === tile.id)
+                return movement ? {...tile, spaceID: movement.spaceID} : tile
+            })
+
+            if (saveToHistory){
+                const newHistory = tileHistory.slice(0, historyIndex + 1)
+                newHistory.push(newTiles.map(({id, spaceID}) => ({id, spaceID})))
+                setTileHistory(newHistory)
+                setHistoryIndex(newHistory.length - 1)
+            }
+
+            return newTiles
+        })
     }
 
     const updateSpace = useCallback((id: number, ref: HTMLDivElement | null) => {
@@ -158,7 +191,8 @@ const Game = ({ letters, boardSize }: GameProps) => {
     const GameContextProps = { 
         gameProps: { letters, boardSize },
         tiles, moveTiles, spaces: spaces.current, updateSpace,
-        dragID, changeDragID, selection, updateSelection,
+        dragID, changeDragID, selection, updateSelection, 
+        history: tileHistory, historyIndex, setHistoryIndex, bestState,
         solution: solution
     }
 
