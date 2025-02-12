@@ -1,5 +1,5 @@
 import GameButton from './GameButton'
-import Game, { useGameContext } from './Game'
+import { useGameContext } from './Game'
 import { shuffleArray } from '@/util/shuffle'
 import { debounce } from "@/util/debounce"
 

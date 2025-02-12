@@ -182,7 +182,7 @@ const Game = ({ letters, boardSize }: GameProps) => {
                 <div>
                     <Board/>
                 </div>
-                <div className='mb-16'>
+                <div className='mb-4'>
                     {/* <InputPanel/> */}
                     <ButtonPanel/>
                     <TilePanel/>
