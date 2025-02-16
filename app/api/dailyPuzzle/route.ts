@@ -3,7 +3,7 @@ import path from 'path'
 
 export async function GET() {
   try {
-    const filePath = path.join(process.cwd(), 'scripts', 'daily-puzzles.txt') // Ensure this path is correct
+    const filePath = process.env.PUZZLE_FILE_PATH || path.join(process.cwd(), 'assets', 'daily-puzzles.txt')
     if (!fs.existsSync(filePath)) {
       return new Response(JSON.stringify({ error: "Puzzle file not found." }), { status: 404 })
     }

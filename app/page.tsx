@@ -5,7 +5,7 @@ export default function Home() {
     <div className="bg-slate-100 h-svh w-svw">
       <div className="justify-self-center max-w-[600px] p-2">
         <h1 className={`font-bold text-center mb-2
-                        text-base xs-box:text-lg sm-box:text-xl md-box:text-2xl`}>
+                        text-lg xs-box:text-xl sm-box:text-2xl md-box:text-3xl`}>
           Word Weave
         </h1><br></br>
         <h1 className={`font-bold text-center mb-2
@@ -22,7 +22,7 @@ export default function Home() {
           Try to use all the tiles. There's always a way to use them all, and usually there are many ways. 
         </p>
         
-        <div className="justify-self-center">
+        <div className="justify-self-center mt-2">
           <Link href={"/daily"}>
             <button className={`bg-emerald-800 text-white justify-self-center
             active:bg-emerald-600 hover:bg-emerald-700

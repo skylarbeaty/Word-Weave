@@ -23,6 +23,7 @@ COPY --from=builder /app/package.json /app/package.json
 COPY --from=builder /app/.next /app/.next
 COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/public /app/public
+COPY --from=builder /app/assets /app/assets
 
 # Set environment variable to production
 ENV NODE_ENV=production
