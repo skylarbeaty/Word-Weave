@@ -55,14 +55,14 @@ sorted_words = sorted(checked_words, key=len)
 print("Writing text file...")
 
 # write txt file
-with open(output_txt, "w", encoding="utf-8") as f:
-    f.write("\n".join(sorted_words))
+with open(output_txt, "w", encoding="utf-8") as file:
+    file.write("\n".join(sorted_words))
 
 print("Writing ts file...")
 
 # write typescript file
 word_list_ts = f'export const wordList = new Set({json.dumps(sorted_words)});\n'
-with open(output_ts, "w", encoding="utf-8") as f:
-    f.write(word_list_ts)
+with open(output_ts, "w", encoding="utf-8") as file:
+    file.write(word_list_ts)
 
 print(f"Processed {len(checked_words)} words. Output saved to {output_txt} and {output_ts}.")

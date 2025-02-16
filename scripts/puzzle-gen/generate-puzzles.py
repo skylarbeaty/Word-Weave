@@ -2,12 +2,15 @@ import random, copy
 
 wordlist_file = "./checked-wordlist.txt"
 common_words_file = "./common-words.txt"
+output_puzzles_info_file = "generated-puzzle-info.txt"
+output_puzzles_file = "generated-puzzle.txt"
 
 board_width = 10
 board_height = 10
 letter_limit = 30
 
-number_puzzles_to_gen = 1000
+num_puzzles_to_gen = 10000
+num_puzzles_before_write = 100
 
 def load_wordlist():
     with open(wordlist_file, encoding="utf-8") as file:
@@ -102,7 +105,7 @@ class Puzzle:
             print(f"stepped back on fewer than {len(self.board_history)} words, reseting board")
             self.reset()
         if not self.all_words_valid():
-            print("stil invalid after stepping back, reseting board")
+            print("still invalid after stepping back, reseting board")
             self.reset()
         
     # scan the board for all words, including any unintentional ones
@@ -176,17 +179,49 @@ def load_words():
 
     return list(common_words & full_wordlist)  # Keep only words in both files
 
+def load_alphas():
+    with open(output_puzzles_file, encoding="utf-8") as file:
+        return set(word.strip().lower() for word in file)
+
+def write_puzzles_to_file(puzzles, alphas_used):
+    alphas = []
+    puzzle_prints = []
+    dupe_alphas = []
+    
+    for puzzle in puzzles:
+        tiles = puzzle.get_tiles(True)
+        alpha = "".join(tiles)
+        random.shuffle(tiles)
+        if alpha in alphas_used:
+            dupe_alphas.append(alpha)
+        alphas_used.add(alpha)
+
+        alphas.append(alpha)
+        puzzle_prints.append(alpha + "\n" + str(tiles) + "\n" + str(puzzle.get_words()) + puzzle.board_to_string() + "\n")
+        
+    print("Writing to file...")
+    with open(output_puzzles_file, "a", encoding="utf-8") as file:
+        file.write("\n".join(alphas) + "\n")
+    with open(output_puzzles_info_file, "a", encoding="utf-8") as file:
+        file.write("".join(puzzle_prints))
+    print("Writing complete :3")
+
 def generate_puzzles():
     print("Generating Puzzles")
     words = load_words()
     used_words = []
     used_words_last_len = 0
     puzzles = []
+    total_puzzles_generated = 0
     puzzle = Puzzle()
-    alphas_used = set()
+    alphas_used = set() 
     
-    while len(puzzles) < number_puzzles_to_gen:
-        print(f"-> Working on puzzle {len(puzzles) + 1}/{number_puzzles_to_gen}...")
+    while total_puzzles_generated < num_puzzles_to_gen:
+        if len(puzzles) >= num_puzzles_before_write:
+            write_puzzles_to_file(puzzles, alphas_used)
+            puzzles = []
+        
+        print(f"-> Working on puzzle {total_puzzles_generated + 1}/{num_puzzles_to_gen}...")
         print(f"#: {len(used_words)} words are already used, out of {len(words)} common words")
 
         random.shuffle(words)
@@ -195,11 +230,10 @@ def generate_puzzles():
             print("Looped without finding a word, stepping back and recycling words")
             puzzle.step_back()
             used_words = []
-            if used_words_last_len == 0:
-
-                print(puzzle.board_to_string())
+            # if used_words_last_len == 0:
+            #     print(puzzle.board_to_string())
         if (len(used_words) > 500):
-            print("Words 60 percent used, recycling words")
+            print("Too many words used, recycling words")
             used_words = []
         used_words_last_len = len(used_words)
         
@@ -220,25 +254,20 @@ def generate_puzzles():
                     used_words.append(word)
                     break
             if len(puzzle.get_tiles()) == letter_limit:
+                alpha = "".join(puzzle.get_tiles(True))
+                if alpha in alphas_used: # duplicate puzzle made
+                    print("X Made duplicate puzzle, puzzle reset")
+                    puzzle = Puzzle()
+                    break
                 puzzles.append(puzzle)
+                total_puzzles_generated += 1
                 puzzle = Puzzle()
-                print(f"~ Completed puzzle {len(puzzles)}")
+                print(f"~ Completed puzzle {total_puzzles_generated}")
                 break
 
-    dupes_found = 0
-    for puzzle in puzzles:
-        tiles = puzzle.get_tiles(True)
-        alpha = "".join(tiles)
-        random.shuffle(tiles)
-        if alpha in alphas_used:
-            dupes_found += 1
-        alphas_used.add(alpha)
-
-        print(alpha)
-        print(tiles)
-        print(puzzle.get_words())
-        print(puzzle.board_to_string())
-    print(f"Duplicates found {dupes_found} out of {number_puzzles_to_gen} puzzles generated")
+    write_puzzles_to_file(puzzles, alphas_used)
+    print("Puzzle generation complete ^.^")
+    
 
 def puzzle_tests():
     puzzle = Puzzle()
@@ -265,16 +294,15 @@ def puzzle_tests():
     print(f"puzzles tile length: {len(puzzle.get_tiles())}, tiles: {puzzle.get_tiles()}")
     print(puzzle.board_to_string())
 
-    puzzle.step_back()
-    puzzle.step_back()
-    puzzle.step_back()
-    puzzle.step_back()
-    puzzle.step_back()
-    puzzle.step_back()
-    print(puzzle.board_to_string())
-    puzzle.step_back()
-    print(puzzle.board_to_string())
-
+    # puzzle.step_back()
+    # puzzle.step_back()
+    # puzzle.step_back()
+    # puzzle.step_back()
+    # puzzle.step_back()
+    # puzzle.step_back()
+    # print(puzzle.board_to_string())
+    # puzzle.step_back()
+    # print(puzzle.board_to_string())
 
     # Expected output:
         # vault⬩⬩⬩⬩⬩
