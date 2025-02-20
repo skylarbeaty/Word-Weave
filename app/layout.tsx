@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import "./globals.css";
+import { PostHogProvider } from '@/components/post-hog/PostHogPorvider'
+import PostHogPageView from '@/components/post-hog/PostHogPageView'
+import "./globals.css"
 
 export const metadata: Metadata = {
   title: "Word Weave",
@@ -14,9 +16,12 @@ export const viewport: Viewport = {
 export default function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) {
   return (
     <html lang="en">
-      <body className={`h-svh w-svw`}>
-        {children}
-      </body>
-    </html>
+        <body className={`h-svh w-svw`}>
+          <PostHogProvider>
+            <PostHogPageView />
+            {children}
+          </PostHogProvider>
+        </body>
+      </html>
   );
 }
