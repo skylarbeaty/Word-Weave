@@ -8,6 +8,12 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 
+# Copy Prisma schema before running generate
+COPY prisma/ prisma/
+
+# Generate Prisma client
+RUN npx prisma generate
+
 # Copy the environment file
 COPY .env.production .env.production
 
@@ -27,6 +33,8 @@ COPY --from=builder /app/.next /app/.next
 COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/public /app/public
 COPY --from=builder /app/assets /app/assets
+COPY --from=builder /app/.env.production /app/.env
+COPY --from=builder /app/prisma/schema.prisma /app/prisma/schema.prisma
 
 # Set environment variable to production
 ENV NODE_ENV=production
