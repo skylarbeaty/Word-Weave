@@ -24,7 +24,6 @@ async function main() {
   const segmentLength = 13
   for (let i = 0; i < lines.length; i += segmentLength) {
     const lettersAlpha = lines[i]
-    // const lettersScrabbled = JSON.parse(lines[i + 1])
     const lettersScrabbled = JSON.parse(lines[i + 1].replace(/'/g, '"').toUpperCase())
     const knownSolution = lines.slice(i + 3, i + 13) // board as an array of strings
 
