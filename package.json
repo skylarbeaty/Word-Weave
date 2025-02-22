@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next-auth/prisma-adapter": "^1.0.7",
     "autoprefixer": "^10.4.20",
     "next": "15.1.4",
+    "next-auth": "^4.24.11",
     "posthog-js": "^1.219.4",
     "react": "^19.0.0",
     "react-dnd": "^16.0.1",

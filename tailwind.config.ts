@@ -13,9 +13,9 @@ export default {
         foreground: "var(--foreground)",
       },
       screens: {
-        'xs-box': { 'raw': '(min-width: 310px) and (min-height: 450px)'}, 
-        'sm-box': { 'raw': '(min-width: 400px) and (min-height: 590px)'}, 
-        'md-box': { 'raw': '(min-width: 510px) and (min-height: 760px)'}, 
+        'xs-box': { 'raw': '(min-width: 310px) and (min-height: 620px)'}, 
+        'sm-box': { 'raw': '(min-width: 400px) and (min-height: 800px)'}, 
+        'md-box': { 'raw': '(min-width: 510px) and (min-height: 1020px)'}, 
         'lg-box': { 'raw': '(min-width: 550px) and (min-height: 1400px)'}, 
       },
     },

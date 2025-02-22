@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function Home() {
   return (
-    <div className="bg-slate-100 h-svh w-svw">
+    <div className="h-svh w-svw mt-4">
       <div className="justify-self-center max-w-[600px] p-2">
         <h1 className={`font-bold text-center mb-2
                         text-lg xs-box:text-xl sm-box:text-2xl md-box:text-3xl`}>
