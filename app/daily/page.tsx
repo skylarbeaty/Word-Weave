@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Game from '@/components/Game'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 const boardSize = { width: 10, height: 10 }
 
@@ -32,7 +33,7 @@ export default function Daily() {
         {letters.length > 0 ? (
           <Game letters={letters} boardSize={boardSize} />
         ) : (
-          <p className="justify-self-center">Loading puzzle...</p>
+          <LoadingSpinner/>
         )}
       </div>
     </div>
