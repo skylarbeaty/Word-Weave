@@ -10,28 +10,29 @@ const Shuffle = () => {
     const moveTiles = gameContext.moveTiles
 
     const handleShuffle = () => {
-    const panelTiles = tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "panel")
-    let unusedSpaces = shuffleArray(spaces.filter(space => space.position.container === "panel"))
+        const panelTiles = tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "panel")
+        let unusedSpaces = shuffleArray(spaces.filter(space => space.position.container === "panel"))
 
-    const movements = panelTiles.map(tile => ({
-        id: tile.id,
-        spaceID: unusedSpaces.shift()!.id
-    }))
+        const movements = panelTiles.map(tile => ({
+            id: tile.id,
+            spaceID: unusedSpaces.shift()!.id
+        }))
 
-    moveTiles(movements, false)
+        moveTiles(movements, false)
     }
 
     const shuffleDisabled = () => {
-    return (tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "panel").length === 0)
+        return (tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "panel").length === 0)
     }
-  return (
-    <GameButton handlePointerDown={debounce(handleShuffle, 100)} disabled={shuffleDisabled()}>
-        <img
-        src="/shuffle.svg"
-        alt="shuffle"
-        />
-    </GameButton>
-  )
+
+    return (
+        <GameButton handlePointerDown={debounce(handleShuffle, 100)} disabled={shuffleDisabled()}>
+            <img
+                src="/shuffle.svg"
+                alt="shuffle"
+            />
+        </GameButton>
+    )
 }
 
 export default Shuffle
