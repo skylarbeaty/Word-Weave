@@ -65,6 +65,7 @@ export function useGameContext(){
 }
 
 interface GameProps {
+    puzzleID: string
     letters: string[]
     boardSize: {
         width: number
@@ -72,7 +73,7 @@ interface GameProps {
     }
 }
 
-const Game = ({ letters, boardSize }: GameProps) => {
+const Game = ({ letters, boardSize, puzzleID }: GameProps) => {
     const boardLength = boardSize.width * boardSize.height
     const lettersLength = letters.length
     
@@ -189,7 +190,7 @@ const Game = ({ letters, boardSize }: GameProps) => {
     }
 
     const GameContextProps = { 
-        gameProps: { letters, boardSize },
+        gameProps: { letters, boardSize, puzzleID },
         tiles, moveTiles, spaces: spaces.current, updateSpace,
         dragID, changeDragID, selection, updateSelection, 
         history: tileHistory, historyIndex, setHistoryIndex, bestState,

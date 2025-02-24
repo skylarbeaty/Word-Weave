@@ -8,6 +8,7 @@ const boardSize = { width: 10, height: 10 }
 
 export default function Daily() {
   const [letters, setLetters] = useState([])
+  const [puzzleID, setPuzzleID] = useState("")
 
   useEffect(() => {
     async function fetchPuzzle() {
@@ -16,6 +17,7 @@ export default function Daily() {
         const data = await response.json()
         if (data.puzzle) {
           setLetters(data.puzzle)
+          setPuzzleID(data.puzzleID)
         } else {
           console.error("Failed to load puzzle:", data.error)
         }
@@ -31,7 +33,7 @@ export default function Daily() {
     <div className="bg-slate-100 flex items-center justify-center w-full">
       <div className="h-svh w-svw">
         {letters.length > 0 ? (
-          <Game letters={letters} boardSize={boardSize} />
+          <Game letters={letters} boardSize={boardSize} puzzleID={puzzleID}/>
         ) : (
           <LoadingSpinner/>
         )}

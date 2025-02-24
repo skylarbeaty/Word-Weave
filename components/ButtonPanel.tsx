@@ -11,7 +11,8 @@ const ButtonPanel = () => {
   const moveTiles = gameContext.moveTiles
   const selection = gameContext.selection
   const updateSelection = gameContext.updateSelection
-  const boardLength = gameContext.gameProps.boardSize.width * gameContext.gameProps.boardSize.height
+  const boardSize = gameContext.gameProps.boardSize
+  const boardLength = boardSize.width * boardSize.height
   const history = gameContext.history
   const historyIndex = gameContext.historyIndex
   const setHistoryIndex = gameContext.setHistoryIndex
@@ -134,12 +135,58 @@ const ButtonPanel = () => {
     return bestState ? JSON.stringify(bestState.state) === JSON.stringify(history[historyIndex])  : true;
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const puzzleID = gameContext.gameProps.puzzleID
+    const boardState = boardJSON()
+    const score = solution.score
+  
+    try {
+      const response = await fetch("/api/dailyPuzzle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          puzzleID,
+          boardState,
+          score
+        }),
+      })
+  
+      if (response.ok) {
+        console.log("Submission successful!")
+      } else {
+        console.error("Submission failed:", await response.text())
+      }
+    } catch (error) {
+      console.error("Error submitting puzzle:", error)
+    }
+  }
 
+  const boardJSON = () => {
+    const board = Array(boardSize.height).fill(null).map(() => Array(boardSize.width).fill(""))
+    tiles.forEach(tile => {
+      const space = spaces.find(space => space.id === tile.spaceID)
+      if (space && space.position.container === "board"){
+        const { index } = space.position
+        const row = Math.floor(index / boardSize.width)
+        const col = index % boardSize.width
+        board[row][col] = tile.letter
+      }
+    })
+    return JSON.stringify(board)
   }
 
   const submitDisabled = () => {
-    return (solution.score === 0)
+    const panelTiles = tiles.filter(tile => spaces.find(space => space.id === tile.spaceID)?.position.container === "panel")
+    return (panelTiles.length != 0 || solution.errorTiles.size != 0)
+  }
+
+  let submitRingStyle = ""
+  if (!submitDisabled()){
+    if (solution.solutionTiles.size == tiles.length && solution.disconnectedValidTiles.size == 0){
+      submitRingStyle = "ring-emerald-700 ring-1 xs-box:ring-2 sm-box:ring-[3px]"
+    } else {
+      submitRingStyle = "ring-amber-300 ring-1 xs-box:ring-2 sm-box:ring-[3px]"
+    }
   }
 
   return (
@@ -194,12 +241,12 @@ const ButtonPanel = () => {
             alt="star"
           />
         </GameButton>
-        {/* <GameButton handlePointerDown={handleSubmit} disabled={submitDisabled()}>
+        <GameButton handlePointerDown={handleSubmit} disabled={submitDisabled()} style={submitRingStyle}>
           <img
             src="/launch.svg"
             alt="submit"
           />
-        </GameButton> */}
+        </GameButton>
     </div>
   )
 }
