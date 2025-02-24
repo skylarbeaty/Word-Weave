@@ -2,38 +2,73 @@ import { prisma } from "@/app/lib/db"
 import { getServerSession } from "next-auth"
 import authOptions from "@/app/lib/authOptions"
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    const today = new Date()
+    const session = await getServerSession(authOptions)
+    
+    // Find today's puzzle, based on user time zone
+    const url = new URL(req.url)
+    const userTimeZone = url.searchParams.get("timezone") || "UTC"
+    const now = new Date()
+    const localDateString = now.toLocaleDateString("en-US", { timeZone: userTimeZone })
+    const localDate = new Date(localDateString)
+    const dateString = localDate.toISOString().split("T")[0] + "T00:00:00.000Z"
+    console.log("Local:", localDate)
+    console.log("Date String:", dateString)
 
-    const startOfDay = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 0, 0, 0))
-    const endOfDay = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 23, 59, 59))
     const puzzle = await prisma.puzzle.findFirst({
       where: {
-        date: {
-          gte: startOfDay, // >= midnight UTC
-          lt: endOfDay,    // < eod UTC
-        },
-      },
+        date: dateString
+      }
     });
 
     if (!puzzle) {
       return new Response(JSON.stringify({ error: "No puzzle found for today." }), { status: 404 })
     }
 
+    // See if the user has already submitted a solution to this puzzle
+    let userSolution = null
+
+    if (session && session.user?.email){
+      const user = await prisma.user.findUnique({
+        where: {email: session.user.email},
+        select: { id: true }
+      })
+
+      if (user){
+        userSolution = await prisma.puzzleSolution.findUnique({
+          where: { userID_puzzleID: {userID: user.id, puzzleID: puzzle.id}},
+          select: { 
+            score: true,
+            boardState: true,
+            submittedAt: true
+          }
+        })
+
+        if (userSolution) {
+          userSolution = {
+            ...userSolution,
+            submittedAt: userSolution.submittedAt.toISOString(), 
+          }
+        }
+      }
+    }
+
     return new Response(JSON.stringify({ 
       puzzle: JSON.parse(puzzle.lettersScrambled),
-      puzzleID: puzzle.id
+      puzzleID: puzzle.id,
+      userSolution
     }), { status: 200 })
 
   } catch (error) {
+    console.log(error)
     return new Response(JSON.stringify({ error: "Internal server error." }), { status: 500 })
   }
 }
 
 export async function POST(req: Request) {
   try{
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions)
     if (!session || !session.user?.email) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 })
     }

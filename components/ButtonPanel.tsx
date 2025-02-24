@@ -153,6 +153,7 @@ const ButtonPanel = () => {
   
       if (response.ok) {
         console.log("Submission successful!")
+        window.location.reload()
       } else {
         console.error("Submission failed:", await response.text())
       }
