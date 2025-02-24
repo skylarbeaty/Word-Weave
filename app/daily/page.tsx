@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react'
-import Game from '@/components/Game'
+import Game from '@/components/game/Game'
 import LoadingSpinner from '@/components/LoadingSpinner'
 
 const boardSize = { width: 10, height: 10 }

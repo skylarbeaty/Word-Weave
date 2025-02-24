@@ -5,8 +5,8 @@ import "@/app/game.css"
 import Tile from './Tile'
 import TilePanel from './TilePanel'
 import Board from './Board'
-import InputPanel from '@/components/InputPanel'
-import ButtonPanel from '@/components/ButtonPanel'
+import InputPanel from './InputPanel'
+import ButtonPanel from './ButtonPanel'
 import { searchBoard } from '@/app/boardSolver'
 
 export interface TileData{

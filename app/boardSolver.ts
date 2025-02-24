@@ -1,6 +1,6 @@
 import { debounce } from "@/util/debounce"
 import { wordList } from "@/scripts/word-list-gen/wordlist"
-import { TileData, SpaceData, SolutionData } from "@/components/Game"
+import { TileData, SpaceData, SolutionData } from "@/components/game/Game"
 
 interface WordData {
     id: number
