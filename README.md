@@ -31,9 +31,9 @@ const handleShuffle = () => {
 
 Once the game is ongoing and there are tilesonthe board, the game needs to give feedback to the player. They need to be able to tell if the words they entered are accepted as part of the solution. One of the more complicated parts of this is checking to see that words are all connected to eachother. 
 
-To make sure all the words in a solution are connected, we start with one word to branch out from. From that word we check each of its neighboring words, that is words that share one of the same tiles. The graphs of words made by the player might have cycles in it, so we need to make sure we dont visit the same word twice.
+To make sure all the words in a solution are connected, we start with one word to branch out from. From that word we check each of its neighboring words, that is words that share one of the same tiles. The graphs of words made by the player might have cycles in it, so we need to make sure we don't visit the same word twice.
 
-Since we're checking to make sure the graph the player made is connected, we should deal with the case where its not connected. What if the first word the system check is disconnected but all of the other words are connected? Surely we want the to still show the larger bulk of words as 
+Since we're checking to make sure the graph the player made is connected, we should deal with the case where the graph is not fully connected. What if the first word the system check is disconnected but all of the other words are connected? Surely we want the to still show the larger bulk of words as the solution. So if there were any words that weren't in the first connected subgraph, it will start looking again with the any unvisited words, until they've all been checked.
 
 *from [`boardSolver.ts`](./app/boardSolver.ts)*
 ```tsx
