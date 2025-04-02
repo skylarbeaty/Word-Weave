@@ -1,61 +1,67 @@
+import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/app/lib/db"
 
-export async function GET(req: Request, { params }: { params: { userID: string } }) {
-    try {
-        const { userID: id } = await params
 
-        if (!id) {
-            return new Response(JSON.stringify({ error: "User ID is required."}), { status: 400 })
+interface Params {
+    userID: string;
+}
+
+export async function GET(req: NextRequest, { params } : { params: Promise<{ userID: string }>}) {
+    try {
+        const userID = (await params).userID
+
+        if (!userID) {
+            return NextResponse.json({ error: "User ID is required."}, { status: 400 })
         }
 
         const user = await prisma.user.findUnique({
-            where: { id }
+            where: { id: userID }
         })
 
         if (!user) {
-            return new Response(JSON.stringify({ error: "User not found."}), { status: 404 })
+            return NextResponse.json({ error: "User not found."}, { status: 404 })
         }
 
-        return new Response(JSON.stringify(user), { status: 200 })
+        return NextResponse.json(user, { status: 200 })
     } catch(error) {
-        return new Response(JSON.stringify({ error: "Internal server error."}), { status: 500 })
+        return NextResponse.json({ error: "Internal server error."}, { status: 500 })
     }
 }
 
-export async function PUT(req: Request, { params }: { params: { userID: string } }) {
+export async function PUT(req: NextRequest, { params } : { params: Promise<{ userID: string }>}) {
     try {
-        const { userID: id } = await params
+        const userID = (await params).userID
         const { name, email } = await req.json()
 
-        if (!id) {
-            return new Response(JSON.stringify({ error: "User ID is required."}), { status: 400 })
+        if (!userID) {
+            return NextResponse.json({ error: "User ID is required."}, { status: 400 })
         }
 
         const updatedUser = await prisma.user.update({
-            where: { id },
+            where: { id: userID },
             data: { email, name }
         })
 
-        return new Response(JSON.stringify(updatedUser), { status: 200 })
+        return NextResponse.json(updatedUser, { status: 200 })
     } catch(error) {
-        return new Response(JSON.stringify({ error: "Internal server error."}), { status: 500 })
+        return NextResponse.json({ error: "Internal server error."}, { status: 500 })
     }
 }
 
-export async function DELETE(req: Request, { params }: { params: { userID: string } }){
+export async function DELETE(req: NextRequest, { params } : { params: Promise<{ userID: string }> }){
     try {
-        const { userID: id } = await params
+        const userID = (await params).userID
 
-        if (!id) {
-            return new Response(JSON.stringify({ error: "User ID is required."}), { status: 400 })
+        if (!userID) {
+            return NextResponse.json({ error: "User ID is required."}, { status: 400 })
         }
 
         await prisma.user.delete({
-            where: { id },
+            where: { id: userID },
           })
 
-          return new Response(JSON.stringify({ message: "User deleted successfully." }), { status: 200 })
+          return NextResponse.json({ message: "User deleted successfully." }, { status: 200 })
     } catch(error) {
-        return new Response(JSON.stringify({ error: "Internal server error."}), { status: 500 })
+        return NextResponse.json({ error: "Internal server error."}, { status: 500 })
     }
 }
