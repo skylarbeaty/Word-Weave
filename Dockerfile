@@ -33,5 +33,3 @@ COPY --from=builder /app/prisma /app/prisma
 
 # Start the Next.js server
 CMD ["npm", "run", "start"]
-
-CMD npx prisma migrate deploy
