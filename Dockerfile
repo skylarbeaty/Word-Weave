@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copy package.json and install dependencies
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm install --include=dev
 
 # Copy Prisma schema before running generate
 COPY prisma/ prisma/
