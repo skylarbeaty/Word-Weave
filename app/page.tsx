@@ -8,10 +8,6 @@ export default function Home() {
                         text-lg xs-box:text-xl sm-box:text-2xl md-box:text-3xl`}>
           Word Weave
         </h1><br></br>
-        <h1 className={`font-bold text-center mb-2
-                        text-base xs-box:text-base sm-box:text-lg md-box:text-xl`}>
-          Welcome to the closed alpha
-        </h1><br></br>
         <p>
           Word Weave is the anagram finding daily puzzle game. Each day there is a new set of lettered tiles. Your job is to weave a pattern of words together on the board. 
         </p><br></br>
@@ -20,8 +16,14 @@ export default function Home() {
         </p><br></br>
         <p>
           Try to use all the tiles. There's always a way to use them all, and usually there are many ways. 
-        </p>
-        
+        </p><br></br>
+        <h1 className={`font-bold text-center mb-2
+                        text-base xs-box:text-base sm-box:text-lg md-box:text-xl`}>
+          Welcome to the alpha
+        </h1>
+        <p className='text-center italic'>
+          Note: only Chromium based browsers are currently supported
+        </p><br></br>
         <div className="justify-self-center mt-2">
           <Link href={"/daily"}>
             <button className={`text-white justify-self-center
